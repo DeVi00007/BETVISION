@@ -3,7 +3,7 @@ import {
   HelpCircle,
   Settings,
   BarChart3,
-  Browser,
+  Globe,         
   Table,
 } from 'lucide-react';
 
@@ -182,7 +182,7 @@ const sections = [
   },
   {
     id: 'suti-kezeles',
-    icon: Browser,
+    icon: Globe,
     title: '4. Süti kezelés beállítása',
     content: `A legtöbb böngésző alapértelmezés szerint elfogadja a sütiket, de Ön beállíthatja
     böngészőjét, hogy elutasítsa az összes sütit, vagy figyelmeztesse Önt, amikor süti

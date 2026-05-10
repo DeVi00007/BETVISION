@@ -224,7 +224,7 @@ export async function fetchLiveMatches(): Promise<ConvertedMatch[]> {
       return mockMatches.map((m) => ({ ...m, fixtureId: parseInt(m.id.replace('m', '')) || 0, leagueId: 0 }));
     }
 
-    const matches = data.map((f) => convertFixtureToMatch(f));
+    const matches = (data as any[]).map((f) => convertFixtureToMatch(f));
     setCachedData('live_matches', matches);
     return matches;
   } catch (error) {
@@ -254,9 +254,10 @@ export async function fetchUpcomingMatches(
     }
 
     // Csak a top bajnokságok meccseit szűrjük
+    const fixturesArray = data as any[];
     const filtered = leagueId
-      ? data
-      : data.filter((f) => TOP_LEAGUE_IDS.includes(f.league.id));
+      ? fixturesArray
+      : fixturesArray.filter((f) => TOP_LEAGUE_IDS.includes(f.league?.id));
 
     // Odds-ok lekérdezése az első 6 meccshez (rate limit miatt nem mindegyikhez)
     const matchesWithOdds: ConvertedMatch[] = [];
