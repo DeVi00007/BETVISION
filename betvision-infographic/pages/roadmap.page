@@ -1,0 +1,391 @@
+pageType: content
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [60, 25, 300, 20]
+    content:
+      style: "$label"
+      text: |
+        <p>FEJLESZTÉSI TERV</p>
+      wrap: false
+
+  - elementId: page-title
+    elementType: text
+    bounds: [60, 50, 700, 55]
+    content:
+      style: "$title"
+      fontSize: 36
+      text: |
+        <p>Roadmap — Mit Hoz a Jövő?</p>
+      wrap: false
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [60, 110, 120, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 3, color: "$primary"}
+
+  - elementId: timeline-line
+    elementType: shape
+    bounds: [140, 290, 1000, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 3, color: "$primary"}
+
+  - elementId: dot1
+    elementType: shape
+    bounds: [130, 280, 20, 20]
+    shapeName: ellipse
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: q1-bg
+    elementType: shape
+    bounds: [60, 130, 260, 140]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: q1-title
+    elementType: text
+    bounds: [75, 140, 230, 30]
+    content:
+      fontSize: 20
+      color: "$primary"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Q1 2026</p>
+
+  - elementId: q1-body
+    elementType: text
+    bounds: [75, 175, 230, 80]
+    content:
+      fontSize: 14
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>Valós odds API integráció</p>
+        <p>iOS és Android natív app</p>
+        <p>Fogadási napló (bet history)</p>
+
+  - elementId: q1-down
+    elementType: shape
+    bounds: [140, 310, 0, 80]
+    shapeName: straightConnector1
+    border: {style: solid, width: 2, color: "$primary"}
+
+  - elementId: q1-card-bg
+    elementType: shape
+    bounds: [60, 400, 260, 180]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$primary"}
+
+  - elementId: q1-card-icon
+    elementType: icon
+    bounds: [80, 415, 28, 28]
+    iconName: "fas:mobile-screen"
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: q1-card-title
+    elementType: text
+    bounds: [80, 450, 220, 28]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Mobil App Launch</p>
+
+  - elementId: q1-card-body
+    elementType: text
+    bounds: [80, 482, 220, 80]
+    content:
+      fontSize: 14
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.4
+      text: |
+        <p>React Native alapú iOS és Android app az összes funkcióval.</p>
+
+  - elementId: dot2
+    elementType: shape
+    bounds: [395, 280, 20, 20]
+    shapeName: ellipse
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: q2-bg
+    elementType: shape
+    bounds: [325, 130, 260, 140]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: q2-title
+    elementType: text
+    bounds: [340, 140, 230, 30]
+    content:
+      fontSize: 20
+      color: "$accent"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Q2 2026</p>
+
+  - elementId: q2-body
+    elementType: text
+    bounds: [340, 175, 230, 80]
+    content:
+      fontSize: 14
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>Többsportos AI modell</p>
+        <p>Tenisz, kosár, jégkorong</p>
+        <p>e-Sport támogatás</p>
+
+  - elementId: q2-down
+    elementType: shape
+    bounds: [405, 310, 0, 80]
+    shapeName: straightConnector1
+    border: {style: solid, width: 2, color: "$accent"}
+
+  - elementId: q2-card-bg
+    elementType: shape
+    bounds: [325, 400, 260, 180]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$accent"}
+
+  - elementId: q2-card-icon
+    elementType: icon
+    bounds: [345, 415, 28, 28]
+    iconName: "fas:expand"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: q2-card-title
+    elementType: text
+    bounds: [345, 450, 220, 28]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Multisport AI</p>
+
+  - elementId: q2-card-body
+    elementType: text
+    bounds: [345, 482, 220, 80]
+    content:
+      fontSize: 14
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.4
+      text: |
+        <p>Külön neurális hálózat minden sportághoz, sport-specifikus változókkal.</p>
+
+  - elementId: dot3
+    elementType: shape
+    bounds: [660, 280, 20, 20]
+    shapeName: ellipse
+    fill:
+      type: solid
+      color: "$gold"
+
+  - elementId: q3-bg
+    elementType: shape
+    bounds: [590, 130, 260, 140]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: q3-title
+    elementType: text
+    bounds: [605, 140, 230, 30]
+    content:
+      fontSize: 20
+      color: "$gold"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Q3 2026</p>
+
+  - elementId: q3-body
+    elementType: text
+    bounds: [605, 175, 230, 80]
+    content:
+      fontSize: 14
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>Tipster marketplace launch</p>
+        <p>Push értesítések</p>
+        <p>Szociális funkciók</p>
+
+  - elementId: q3-down
+    elementType: shape
+    bounds: [670, 310, 0, 80]
+    shapeName: straightConnector1
+    border: {style: solid, width: 2, color: "$gold"}
+
+  - elementId: q3-card-bg
+    elementType: shape
+    bounds: [590, 400, 260, 180]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$gold"}
+
+  - elementId: q3-card-icon
+    elementType: icon
+    bounds: [610, 415, 28, 28]
+    iconName: "fas:bell"
+    fill:
+      type: solid
+      color: "$gold"
+
+  - elementId: q3-card-title
+    elementType: text
+    bounds: [610, 450, 220, 28]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Közösségi Platform</p>
+
+  - elementId: q3-card-body
+    elementType: text
+    bounds: [610, 482, 220, 80]
+    content:
+      fontSize: 14
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.4
+      text: |
+        <p>Tipster előfizetések, push értesítések, chat és social feed.</p>
+
+  - elementId: dot4
+    elementType: shape
+    bounds: [925, 280, 20, 20]
+    shapeName: ellipse
+    fill:
+      type: solid
+      color: "#FF3366"
+
+  - elementId: q4-bg
+    elementType: shape
+    bounds: [855, 130, 260, 140]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: q4-title
+    elementType: text
+    bounds: [870, 140, 230, 30]
+    content:
+      fontSize: 20
+      color: "#FF3366"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Q4 2026</p>
+
+  - elementId: q4-body
+    elementType: text
+    bounds: [870, 175, 230, 80]
+    content:
+      fontSize: 14
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>API platform nyitás</p>
+        <p>Nemzetközi bővítés</p>
+        <p>Automata fogadás</p>
+
+  - elementId: q4-down
+    elementType: shape
+    bounds: [935, 310, 0, 80]
+    shapeName: straightConnector1
+    border: {style: solid, width: 2, color: "#FF3366"}
+
+  - elementId: q4-card-bg
+    elementType: shape
+    bounds: [855, 400, 260, 180]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "#FF3366"}
+
+  - elementId: q4-card-icon
+    elementType: icon
+    bounds: [875, 415, 28, 28]
+    iconName: "fas:globe"
+    fill:
+      type: solid
+      color: "#FF3366"
+
+  - elementId: q4-card-title
+    elementType: text
+    bounds: [875, 450, 220, 28]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Nemzetközi API</p>
+
+  - elementId: q4-card-body
+    elementType: text
+    bounds: [875, 482, 220, 80]
+    content:
+      fontSize: 14
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.4
+      text: |
+        <p>Odds és AI API fejlesztőknek, európai piacok integrációja.</p>
+
+  - elementId: page-num
+    elementType: text
+    bounds: [1200, 690, 50, 20]
+    content:
+      fontSize: 12
+      color: "$secondary"
+      fontFamily: "MiSans"
+      align: [right, middle]
+      wrap: false
+      text: |
+        <p>08</p>

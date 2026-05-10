@@ -1,0 +1,119 @@
+pageType: final
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: bg-gradient
+    elementType: shape
+    bounds: [0, 0, 1280, 720]
+    shapeName: rect
+    fill:
+      type: gradient
+      gradientType: radial
+      stops:
+        - {position: 0, color: "#00FF9418"}
+        - {position: 1, color: "#050505"}
+
+  - elementId: top-line
+    elementType: shape
+    bounds: [440, 160, 400, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 2, color: "$primary"}
+
+  - elementId: logo-icon
+    elementType: icon
+    bounds: [608, 180, 64, 64]
+    iconName: "fas:futbol"
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: main-title
+    elementType: text
+    bounds: [140, 260, 1000, 90]
+    content:
+      fontSize: 64
+      color: "$text"
+      fontFamily: "Jersey15"
+      letterSpacing: 4
+      align: [center, middle]
+      wrap: false
+      text: |
+        <p>BETVISION</p>
+
+  - elementId: subtitle
+    elementType: text
+    bounds: [190, 360, 900, 40]
+    content:
+      fontSize: 24
+      color: "$primary"
+      fontFamily: "Liter"
+      letterSpacing: 4
+      align: [center, middle]
+      wrap: false
+      text: |
+        <p>CSATLAKOZZ A JÖVŐ SPORTFOGADÁSÁHOZ</p>
+
+  - elementId: bottom-line
+    elementType: shape
+    bounds: [440, 415, 400, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 2, color: "$primary"}
+
+  - elementId: keywords
+    elementType: text
+    bounds: [240, 450, 800, 30]
+    content:
+      fontSize: 16
+      color: "$secondary"
+      fontFamily: "MiSans"
+      letterSpacing: 3
+      align: [center, middle]
+      wrap: false
+      text: |
+        <p>AI  |  SPORTFOGADÁS  |  TIPPMIX  |  ODDS  |  ANALITIKA  |  3D</p>
+
+  - elementId: cta-bg
+    elementType: shape
+    bounds: [490, 510, 300, 50]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: cta-text
+    elementType: text
+    bounds: [490, 510, 300, 50]
+    content:
+      fontSize: 20
+      color: "#050505"
+      fontFamily: "Liter"
+      align: [center, middle]
+      wrap: false
+      text: |
+        <p>betvision.hu</p>
+
+  - elementId: warning
+    elementType: text
+    bounds: [340, 600, 600, 30]
+    content:
+      fontSize: 14
+      color: "$secondary"
+      fontFamily: "MiSans"
+      align: [center, middle]
+      wrap: false
+      text: |
+        <p>18+  |  Szerencsejáték függőséget okozhat. Játssz felelősségteljesen.</p>
+
+  - elementId: bottom-bar
+    elementType: shape
+    bounds: [0, 700, 1280, 20]
+    shapeName: rect
+    fill:
+      type: gradient
+      gradientType: linear
+      angle: 0
+      stops:
+        - {position: 0, color: "#00FF94"}
+        - {position: 0.5, color: "#00CCFF"}
+        - {position: 1, color: "#00FF94"}

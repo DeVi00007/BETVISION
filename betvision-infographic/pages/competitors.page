@@ -1,0 +1,272 @@
+pageType: content
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [60, 25, 300, 20]
+    content:
+      style: "$label"
+      text: |
+        <p>PIACI ELEMZÉS</p>
+      wrap: false
+
+  - elementId: page-title
+    elementType: text
+    bounds: [60, 50, 900, 55]
+    content:
+      style: "$title"
+      fontSize: 36
+      text: |
+        <p>Versenytársak Erősségei és Vakfoltjai</p>
+      wrap: false
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [60, 110, 120, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 3, color: "$primary"}
+
+  - elementId: comp-table
+    elementType: table
+    bounds: [60, 130, 750, 530]
+    columnWidths: [0.22, 0.39, 0.39]
+    rowHeights: [0.1, 0.128, 0.128, 0.128, 0.128, 0.128, 0.128, 0.13]
+    style: "$default"
+    rows:
+      - - content:
+            text: |
+              <p><strong>Oldal</strong></p>
+            fontSize: 15
+            color: "$primary"
+        - content:
+            text: |
+              <p><strong>Erősség</strong></p>
+            fontSize: 15
+            color: "$primary"
+        - content:
+            text: |
+              <p><strong>Vakfolt</strong></p>
+            fontSize: 15
+            color: "$primary"
+      - - content:
+            text: |
+              <p>tipplap.hu</p>
+            fontSize: 14
+        - content:
+            text: |
+              <p>Ingyenes tippek, kalkulátor, közösség</p>
+            fontSize: 14
+            color: "#BBBBBB"
+        - content:
+            text: |
+              <p>Elavult dizájn, nincs AI</p>
+            fontSize: 14
+            color: "#BBBBBB"
+      - - content:
+            text: |
+              <p>tippvadasz.hu</p>
+            fontSize: 14
+        - content:
+            text: |
+              <p>Prémium csomagok, affiliate</p>
+            fontSize: 14
+            color: "#BBBBBB"
+        - content:
+            text: |
+              <p>Fizetős fal, nincs interaktív elem</p>
+            fontSize: 14
+            color: "#BBBBBB"
+      - - content:
+            text: |
+              <p>tippmix.hu</p>
+            fontSize: 14
+        - content:
+            text: |
+              <p>Hivatalos, valós odds-ok</p>
+            fontSize: 14
+            color: "#BBBBBB"
+        - content:
+            text: |
+              <p>Nincs tipp/adatvezérelt segítség</p>
+            fontSize: 14
+            color: "#BBBBBB"
+      - - content:
+            text: |
+              <p>tippmixguru.hu</p>
+            fontSize: 14
+        - content:
+            text: |
+              <p>Prémium (Easy Money, VIP)</p>
+            fontSize: 14
+            color: "#BBBBBB"
+        - content:
+            text: |
+              <p>Korlátozott funkcionalitás</p>
+            fontSize: 14
+            color: "#BBBBBB"
+      - - content:
+            text: |
+              <p>tippmixtippek1x2</p>
+            fontSize: 14
+        - content:
+            text: |
+              <p>32 éves tapasztalat</p>
+            fontSize: 14
+            color: "#BBBBBB"
+        - content:
+            text: |
+              <p>Statikus oldal, nincs live adat</p>
+            fontSize: 14
+            color: "#BBBBBB"
+      - - content:
+            text: |
+              <p>tippmixpro.hu</p>
+            fontSize: 14
+        - content:
+            text: |
+              <p>Online fogadás, szimulátor</p>
+            fontSize: 14
+            color: "#BBBBBB"
+        - content:
+            text: |
+              <p>Nincs AI predikció</p>
+            fontSize: 14
+            color: "#BBBBBB"
+      - - content:
+            text: |
+              <p><span style="color:#00FF94;"><strong>BETVISION</strong></span></p>
+            fontSize: 15
+        - content:
+            text: |
+              <p><span style="color:#00FF94;">AI + 3D + Élő odds + Kalkulátor + Közösség</span></p>
+            fontSize: 14
+        - content:
+            text: |
+              <p><span style="color:#00FF94;">Minden egyben, ingyenesen</span></p>
+            fontSize: 14
+
+  - elementId: diff-title
+    elementType: text
+    bounds: [850, 130, 370, 40]
+    content:
+      fontSize: 22
+      color: "$primary"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>BETVISION Előnyei</p>
+
+  - elementId: diff-line
+    elementType: shape
+    bounds: [850, 175, 370, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: adv1-icon
+    elementType: icon
+    bounds: [850, 195, 28, 28]
+    iconName: "fas:robot"
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: adv1-text
+    elementType: text
+    bounds: [890, 195, 330, 60]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "MiSans"
+      lineHeight: 1.4
+      text: |
+        <p><strong>AI Predikció</strong> — 200+ változó, neurális hálózat</p>
+
+  - elementId: adv2-icon
+    elementType: icon
+    bounds: [850, 265, 28, 28]
+    iconName: "fas:cube"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: adv2-text
+    elementType: text
+    bounds: [890, 265, 330, 60]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "MiSans"
+      lineHeight: 1.4
+      text: |
+        <p><strong>3D Vizualizáció</strong> — WebGL focilabda + odds kártyák</p>
+
+  - elementId: adv3-icon
+    elementType: icon
+    bounds: [850, 335, 28, 28]
+    iconName: "fas:calculator"
+    fill:
+      type: solid
+      color: "$gold"
+
+  - elementId: adv3-text
+    elementType: text
+    bounds: [890, 335, 330, 60]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "MiSans"
+      lineHeight: 1.4
+      text: |
+        <p><strong>Profi Kalkulátor</strong> — Kelly, Martingale, Bankroll</p>
+
+  - elementId: adv4-icon
+    elementType: icon
+    bounds: [850, 405, 28, 28]
+    iconName: "fas:signal"
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: adv4-text
+    elementType: text
+    bounds: [890, 405, 330, 60]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "MiSans"
+      lineHeight: 1.4
+      text: |
+        <p><strong>Élő Odds Stream</strong> — Valós idejű frissítések</p>
+
+  - elementId: adv5-icon
+    elementType: icon
+    bounds: [850, 475, 28, 28]
+    iconName: "fas:trophy"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: adv5-text
+    elementType: text
+    bounds: [890, 475, 330, 60]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "MiSans"
+      lineHeight: 1.4
+      text: |
+        <p><strong>Ranglista</strong> — Gamification, tipster versenyek</p>
+
+  - elementId: page-num
+    elementType: text
+    bounds: [1200, 690, 50, 20]
+    content:
+      fontSize: 12
+      color: "$secondary"
+      fontFamily: "MiSans"
+      align: [right, middle]
+      wrap: false
+      text: |
+        <p>03</p>

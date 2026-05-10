@@ -1,0 +1,321 @@
+pageType: content
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [60, 25, 300, 20]
+    content:
+      style: "$label"
+      text: |
+        <p>ÜZLETI MODELL</p>
+      wrap: false
+
+  - elementId: page-title
+    elementType: text
+    bounds: [60, 50, 900, 55]
+    content:
+      style: "$title"
+      fontSize: 36
+      text: |
+        <p>Bevételi Modellek és Piaci Lehetőségek</p>
+      wrap: false
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [60, 110, 120, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 3, color: "$primary"}
+
+  - elementId: r1-bg
+    elementType: shape
+    bounds: [60, 130, 555, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: r1-top
+    elementType: shape
+    bounds: [60, 130, 555, 4]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: r1-icon
+    elementType: icon
+    bounds: [85, 155, 32, 32]
+    iconName: "fas:crown"
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: r1-title
+    elementType: text
+    bounds: [130, 155, 300, 32]
+    content:
+      fontSize: 20
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Prémium AI Csomag</p>
+
+  - elementId: r1-price
+    elementType: text
+    bounds: [430, 152, 160, 40]
+    content:
+      fontSize: 28
+      color: "$primary"
+      fontFamily: "Jersey15"
+      align: [right, middle]
+      wrap: false
+      text: |
+        <p>4,990 Ft/hó</p>
+
+  - elementId: r1-body
+    elementType: text
+    bounds: [85, 200, 510, 70]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>Napi 5+ VIP tipp, részletes AI elemzés, push értesítések, exkluzív közösségi hozzáférés.</p>
+
+  - elementId: r1-tag
+    elementType: text
+    bounds: [85, 280, 120, 24]
+    content:
+      fontSize: 12
+      color: "$primary"
+      fontFamily: "MiSans"
+      wrap: false
+      text: |
+        <p># Előfizetés</p>
+
+  - elementId: r2-bg
+    elementType: shape
+    bounds: [645, 130, 575, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: r2-top
+    elementType: shape
+    bounds: [645, 130, 575, 4]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: r2-icon
+    elementType: icon
+    bounds: [670, 155, 32, 32]
+    iconName: "fas:handshake"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: r2-title
+    elementType: text
+    bounds: [715, 155, 300, 32]
+    content:
+      fontSize: 20
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Affiliate Rendszer</p>
+
+  - elementId: r2-price
+    elementType: text
+    bounds: [1025, 152, 170, 40]
+    content:
+      fontSize: 28
+      color: "$accent"
+      fontFamily: "Jersey15"
+      align: [right, middle]
+      wrap: false
+      text: |
+        <p>CPA/RevShare</p>
+
+  - elementId: r2-body
+    elementType: text
+    bounds: [670, 200, 530, 70]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>Átirányítás TippmixPro/Vegas.hu fogadásokhoz. Minden regisztrált felhasználó után jutalék.</p>
+
+  - elementId: r2-tag
+    elementType: text
+    bounds: [670, 280, 120, 24]
+    content:
+      fontSize: 12
+      color: "$accent"
+      fontFamily: "MiSans"
+      wrap: false
+      text: |
+        <p># Partnerség</p>
+
+  - elementId: r3-bg
+    elementType: shape
+    bounds: [60, 400, 555, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: r3-top
+    elementType: shape
+    bounds: [60, 400, 555, 4]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$gold"
+
+  - elementId: r3-icon
+    elementType: icon
+    bounds: [85, 425, 32, 32]
+    iconName: "fas:store"
+    fill:
+      type: solid
+      color: "$gold"
+
+  - elementId: r3-title
+    elementType: text
+    bounds: [130, 425, 300, 32]
+    content:
+      fontSize: 20
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Tipster Marketplace</p>
+
+  - elementId: r3-price
+    elementType: text
+    bounds: [430, 422, 160, 40]
+    content:
+      fontSize: 28
+      color: "$gold"
+      fontFamily: "Jersey15"
+      align: [right, middle]
+      wrap: false
+      text: |
+        <p>20% Jutalék</p>
+
+  - elementId: r3-body
+    elementType: text
+    bounds: [85, 470, 510, 70]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>Profi tipperek előfizetése. A platform 20%-os jutalékot kap minden előfizetésből.</p>
+
+  - elementId: r3-tag
+    elementType: text
+    bounds: [85, 550, 120, 24]
+    content:
+      fontSize: 12
+      color: "$gold"
+      fontFamily: "MiSans"
+      wrap: false
+      text: |
+        <p># Marketplace</p>
+
+  - elementId: r4-bg
+    elementType: shape
+    bounds: [645, 400, 575, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: r4-top
+    elementType: shape
+    bounds: [645, 400, 575, 4]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#FF3366"
+
+  - elementId: r4-icon
+    elementType: icon
+    bounds: [670, 425, 32, 32]
+    iconName: "fas:code"
+    fill:
+      type: solid
+      color: "#FF3366"
+
+  - elementId: r4-title
+    elementType: text
+    bounds: [715, 425, 300, 32]
+    content:
+      fontSize: 20
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>API Hozzáférés</p>
+
+  - elementId: r4-price
+    elementType: text
+    bounds: [1030, 422, 160, 40]
+    content:
+      fontSize: 28
+      color: "#FF3366"
+      fontFamily: "Jersey15"
+      align: [right, middle]
+      wrap: false
+      text: |
+        <p>Havi Díj</p>
+
+  - elementId: r4-body
+    elementType: text
+    bounds: [670, 470, 530, 70]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>Odds feed és AI predikció API fejlesztőknek és más sportoldalaknak. Havi előfizetési modell.</p>
+
+  - elementId: r4-tag
+    elementType: text
+    bounds: [670, 550, 120, 24]
+    content:
+      fontSize: 12
+      color: "#FF3366"
+      fontFamily: "MiSans"
+      wrap: false
+      text: |
+        <p># B2B API</p>
+
+  - elementId: page-num
+    elementType: text
+    bounds: [1200, 690, 50, 20]
+    content:
+      fontSize: 12
+      color: "$secondary"
+      fontFamily: "MiSans"
+      align: [right, middle]
+      wrap: false
+      text: |
+        <p>07</p>

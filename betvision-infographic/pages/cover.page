@@ -1,0 +1,98 @@
+pageType: cover
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: bg-gradient
+    elementType: shape
+    bounds: [0, 0, 1280, 720]
+    shapeName: rect
+    fill:
+      type: gradient
+      gradientType: radial
+      stops:
+        - {position: 0, color: "#00FF9412"}
+        - {position: 1, color: "#050505"}
+
+  - elementId: top-accent-line
+    elementType: shape
+    bounds: [440, 180, 400, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 2, color: "$primary"}
+
+  - elementId: logo-icon
+    elementType: icon
+    bounds: [616, 200, 48, 48]
+    iconName: "fas:futbol"
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: main-title
+    elementType: text
+    bounds: [140, 265, 1000, 90]
+    content:
+      style: "$title"
+      fontSize: 72
+      fontFamily: "Jersey15"
+      letterSpacing: 4
+      align: [center, middle]
+      wrap: false
+      text: |
+        <p>BETVISION</p>
+
+  - elementId: tagline
+    elementType: text
+    bounds: [190, 370, 900, 40]
+    content:
+      style: "$subtitle"
+      fontSize: 22
+      color: "$primary"
+      letterSpacing: 3
+      align: [center, middle]
+      wrap: false
+      text: |
+        <p>AI-VEZÉRELT SPORTFOGADÁSI INTELLIGENCIA PLATFORM</p>
+
+  - elementId: bottom-accent-line
+    elementType: shape
+    bounds: [440, 425, 400, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 2, color: "$primary"}
+
+  - elementId: stats-row
+    elementType: text
+    bounds: [140, 470, 1000, 30]
+    content:
+      fontSize: 18
+      color: "$secondary"
+      fontFamily: "MiSans"
+      align: [center, middle]
+      wrap: false
+      text: |
+        <p><span style="color:#00FF94;">15,000+</span> felhasználó  |  <span style="color:#00FF94;">68%</span> AI sikeresség  |  <span style="color:#00FF94;">2.4M+</span> elemzett meccs</p>
+
+  - elementId: subtitle2
+    elementType: text
+    bounds: [290, 530, 700, 30]
+    content:
+      fontSize: 18
+      color: "$secondary"
+      fontFamily: "MiSans"
+      align: [center, middle]
+      wrap: false
+      text: |
+        <p>Neurális hálózatok  |  Valós idejű odds  |  Közösségi tippek  |  3D vizualizáció</p>
+
+  - elementId: bottom-bar
+    elementType: shape
+    bounds: [0, 700, 1280, 20]
+    shapeName: rect
+    fill:
+      type: gradient
+      gradientType: linear
+      angle: 0
+      stops:
+        - {position: 0, color: "#00FF94"}
+        - {position: 0.5, color: "#00CCFF"}
+        - {position: 1, color: "#00FF94"}

@@ -1,0 +1,69 @@
+title: "BETVISION — AI Sportfogadási Platform Infografika"
+size: [1280, 720]
+theme:
+  colors:
+    primary: "#00FF94"
+    primaryDim: "#00FF9440"
+    secondary: "#888888"
+    accent: "#00CCFF"
+    background: "#050505"
+    surface: "#111111"
+    surface2: "#1A1A1A"
+    text: "#FFFFFF"
+    gold: "#FFD700"
+    border: "#1A1A1A"
+  textStyles:
+    title:
+      fontSize: 36
+      color: "$text"
+      fontFamily: "Liter"
+      letterSpacing: 1
+    subtitle:
+      fontSize: 22
+      color: "$secondary"
+      fontFamily: "Liter"
+    body:
+      fontSize: 18
+      color: "$text"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+    bigNumber:
+      fontSize: 56
+      color: "$primary"
+      fontFamily: "Jersey15"
+    caption:
+      fontSize: 14
+      color: "$secondary"
+      fontFamily: "MiSans"
+      lineHeight: 1.4
+    label:
+      fontSize: 13
+      color: "$secondary"
+      fontFamily: "MiSans"
+      letterSpacing: 2
+  tableStyles:
+    default:
+      fontSize: 16
+      fontFamily: "MiSans"
+      headerFill: "$surface2"
+      headerColor: "$primary"
+      headerBold: true
+      bodyFill:
+        - "$surface"
+        - "$background"
+      bodyColor: "$text"
+      border:
+        - style: solid
+          width: 1
+          color: "$border"
+        - null
+pages:
+  - pages/cover.page
+  - pages/overview.page
+  - pages/competitors.page
+  - pages/techstack.page
+  - pages/features.page
+  - pages/three_d.page
+  - pages/business.page
+  - pages/roadmap.page
+  - pages/final.page

@@ -1,0 +1,16 @@
+﻿#,Fájl neve,Mappa
+1,`ASZFPage.tsx`,`src/pages/`
+2,`PrivacyPage.tsx`,`src/pages/`
+3,`CookiePage.tsx`,`src/pages/`
+4,`FelelossegPage.tsx`,`src/pages/`
+5,`DonationPage.tsx`,`src/pages/`
+6,`CookieConsent.tsx`,`src/components/`
+7,`DonationButton.tsx`,`src/components/`
+8,`DonationModal.tsx`,`src/components/`
+9,`DonationCTASection.tsx`,`src/sections/`
+10,`api.ts`,`src/services/` ← ÚJ mappa!
+11,`apiFootball.ts`,`src/services/`
+12,`api.ts`,`src/types/` ← ÚJ mappa!
+13,`useLiveOdds.ts`,`src/hooks/`
+14,`useMatches.ts`,`src/hooks/`
+15,`useAITips.ts`,`src/hooks/`

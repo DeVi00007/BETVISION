@@ -1,0 +1,269 @@
+pageType: content
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [60, 25, 300, 20]
+    content:
+      style: "$label"
+      text: |
+        <p>3D VIZUALIZÁCIÓ</p>
+      wrap: false
+
+  - elementId: page-title
+    elementType: text
+    bounds: [60, 50, 700, 55]
+    content:
+      style: "$title"
+      fontSize: 36
+      text: |
+        <p>Sportfogadáshoz Illő 3D Élmény</p>
+      wrap: false
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [60, 110, 120, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 3, color: "$primary"}
+
+  - elementId: desc-bg
+    elementType: shape
+    bounds: [60, 130, 620, 530]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: scene-title
+    elementType: text
+    bounds: [85, 150, 400, 35]
+    content:
+      fontSize: 22
+      color: "$primary"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>3D Scene Összetevők</p>
+
+  - elementId: scene-line
+    elementType: shape
+    bounds: [85, 190, 570, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: item1-icon
+    elementType: icon
+    bounds: [85, 210, 28, 28]
+    iconName: "fas:futbol"
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: item1-text
+    elementType: text
+    bounds: [125, 205, 530, 65]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p><strong style="color:#00FF94;">Pörgő Focilabda</strong> — Icosahedron geometria, Y tengely körüli forgás + egér-parallaxis hintázás. Fehér panelek fekete vonalakkal.</p>
+
+  - elementId: item2-icon
+    elementType: icon
+    bounds: [85, 280, 28, 28]
+    iconName: "fas:square"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: item2-text
+    elementType: text
+    bounds: [125, 275, 530, 65]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p><strong style="color:#00CCFF;">Lebegő Odds Kártyák</strong> — 6 db térben lebegő kártya, hullámzó mozgás sinus függvénnyel, neon zöld szegélyekkel.</p>
+
+  - elementId: item3-icon
+    elementType: icon
+    bounds: [85, 350, 28, 28]
+    iconName: "fas:border-all"
+    fill:
+      type: solid
+      color: "$gold"
+
+  - elementId: item3-text
+    elementType: text
+    bounds: [125, 345, 530, 65]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p><strong style="color:#FFD700;">Zöld Pálya Rács</strong> — Football pitch stílusú grid, dupla réteg, középpont kör + spot. Mintha egy pályát néznél felülről.</p>
+
+  - elementId: item4-icon
+    elementType: icon
+    bounds: [85, 420, 28, 28]
+    iconName: "fas:chart-line"
+    fill:
+      type: solid
+      color: "#FF3366"
+
+  - elementId: item4-text
+    elementType: text
+    bounds: [125, 415, 530, 65]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p><strong style="color:#FF3366;">Profit Görbe</strong> — Felfelé ívelő vonal (szimbóluma a nyereménynek), 12 függőleges profit oszloppal, hullám animációval.</p>
+
+  - elementId: item5-icon
+    elementType: icon
+    bounds: [85, 490, 28, 28]
+    iconName: "fas:sparkles"
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: item5-text
+    elementType: text
+    bounds: [125, 485, 530, 65]
+    content:
+      fontSize: 16
+      color: "$text"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p><strong style="color:#00FF94;">Adatrészecskék</strong> — 60 db lebegő zöld pont, felfelé sodródó mozgás, 60 FPS. Bloom post-processing a fényhatásokhoz.</p>
+
+  - elementId: tech-title
+    elementType: text
+    bounds: [85, 560, 400, 35]
+    content:
+      fontSize: 22
+      color: "$accent"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Technológia</p>
+
+  - elementId: tech-body
+    elementType: text
+    bounds: [85, 595, 570, 60]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>React Three Fiber + Three.js + Postprocessing (Bloom) | ~60 FPS | Deklaratív 3D React komponensek</p>
+
+  - elementId: side-bg
+    elementType: shape
+    bounds: [720, 130, 500, 530]
+    shapeName: rect
+    fill:
+      type: gradient
+      gradientType: linear
+      angle: 90
+      stops:
+        - {position: 0, color: "#0a1a10"}
+        - {position: 1, color: "#050505"}
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: side-title
+    elementType: text
+    bounds: [750, 160, 440, 35]
+    content:
+      fontSize: 22
+      color: "$primary"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Miért Sporttémájú 3D?</p>
+
+  - elementId: side-line
+    elementType: shape
+    bounds: [750, 200, 440, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: side-point1
+    elementType: text
+    bounds: [750, 220, 440, 70]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p><span style="color:#00FF94;">01</span>  <strong>Közvetlen kapcsolat</strong> a focilabda azonnal kommunikálja a sporttémát</p>
+
+  - elementId: side-point2
+    elementType: text
+    bounds: [750, 300, 440, 70]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p><span style="color:#00FF94;">02</span>  <strong>Odds kártyák</strong> lebegnek a labda körül — a fogadás élménye vizuálisan is megjelenik</p>
+
+  - elementId: side-point3
+    elementType: text
+    bounds: [750, 380, 440, 70]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p><span style="color:#00FF94;">03</span>  <strong>Profit görbe</strong> szimbolizálja a növekvő nyereményt — motiváló vizuál</p>
+
+  - elementId: side-point4
+    elementType: text
+    bounds: [750, 460, 440, 70]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p><span style="color:#00FF94;">04</span>  <strong>Zöld pálya rács</strong> alapul — a focipálya ismerős vonalai</p>
+
+  - elementId: side-point5
+    elementType: text
+    bounds: [750, 540, 440, 70]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p><span style="color:#00FF94;">05</span>  <strong>60 FPS animáció</strong> egér-parallaxissal — interaktív élmény</p>
+
+  - elementId: page-num
+    elementType: text
+    bounds: [1200, 690, 50, 20]
+    content:
+      fontSize: 12
+      color: "$secondary"
+      fontFamily: "MiSans"
+      align: [right, middle]
+      wrap: false
+      text: |
+        <p>06</p>

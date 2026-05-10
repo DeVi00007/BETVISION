@@ -1,0 +1,304 @@
+pageType: content
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [60, 25, 300, 20]
+    content:
+      style: "$label"
+      text: |
+        <p>PROJEKT ÁTTEKINTÉS</p>
+      wrap: false
+
+  - elementId: page-title
+    elementType: text
+    bounds: [60, 50, 700, 55]
+    content:
+      style: "$title"
+      fontSize: 40
+      text: |
+        <p>Mi a BETVISION?</p>
+      wrap: false
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [60, 110, 120, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 3, color: "$primary"}
+
+  - elementId: card1-bg
+    elementType: shape
+    bounds: [60, 140, 360, 290]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: card1-icon
+    elementType: icon
+    bounds: [85, 165, 40, 40]
+    iconName: "fas:brain"
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: card1-title
+    elementType: text
+    bounds: [85, 220, 310, 35]
+    content:
+      fontSize: 22
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>AI Predikció</p>
+
+  - elementId: card1-body
+    elementType: text
+    bounds: [85, 260, 310, 130]
+    content:
+      style: "$body"
+      fontSize: 16
+      lineHeight: 1.5
+      color: "#BBBBBB"
+      text: |
+        <p>Mesterséges intelligencia alapú tippajánlások 200+ változó elemzésével: forma, sérülések, időjárás, motiváció, történelmi adatok.</p>
+
+  - elementId: card1-stat
+    elementType: text
+    bounds: [85, 395, 200, 25]
+    content:
+      fontSize: 14
+      color: "$primary"
+      fontFamily: "MiSans"
+      wrap: false
+      text: |
+        <p>68% sikerességi arány</p>
+
+  - elementId: card2-bg
+    elementType: shape
+    bounds: [450, 140, 360, 290]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: card2-icon
+    elementType: icon
+    bounds: [475, 165, 40, 40]
+    iconName: "fas:bolt"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: card2-title
+    elementType: text
+    bounds: [475, 220, 310, 35]
+    content:
+      fontSize: 22
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Élő Odds</p>
+
+  - elementId: card2-body
+    elementType: text
+    bounds: [475, 260, 310, 130]
+    content:
+      style: "$body"
+      fontSize: 16
+      lineHeight: 1.5
+      color: "#BBBBBB"
+      text: |
+        <p>Valós idejű odds adatok a legnagyobb bajnokságokból. WebSocket szimuláció élő frissítésekkel és flash animációval.</p>
+
+  - elementId: card2-stat
+    elementType: text
+    bounds: [475, 395, 200, 25]
+    content:
+      fontSize: 14
+      color: "$accent"
+      fontFamily: "MiSans"
+      wrap: false
+      text: |
+        <p>24/7 adatfrissítés</p>
+
+  - elementId: card3-bg
+    elementType: shape
+    bounds: [840, 140, 380, 290]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: card3-icon
+    elementType: icon
+    bounds: [865, 165, 40, 40]
+    iconName: "fas:users"
+    fill:
+      type: solid
+      color: "$gold"
+
+  - elementId: card3-title
+    elementType: text
+    bounds: [865, 220, 330, 35]
+    content:
+      fontSize: 22
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Közösség & Eszközök</p>
+
+  - elementId: card3-body
+    elementType: text
+    bounds: [865, 260, 330, 130]
+    content:
+      style: "$body"
+      fontSize: 16
+      lineHeight: 1.5
+      color: "#BBBBBB"
+      text: |
+        <p>Tipster ranglista, bankroll menedzsment, Kelly-kritérium kalkulátor, és szelvény szimulátor egy platformon.</p>
+
+  - elementId: card3-stat
+    elementType: text
+    bounds: [865, 395, 200, 25]
+    content:
+      fontSize: 14
+      color: "$gold"
+      fontFamily: "MiSans"
+      wrap: false
+      text: |
+        <p>15,000+ regisztrált tag</p>
+
+  - elementId: kpi-divider
+    elementType: shape
+    bounds: [60, 470, 1160, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: kpi1-bg
+    elementType: shape
+    bounds: [60, 500, 360, 150]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+
+  - elementId: kpi1-accent
+    elementType: shape
+    bounds: [60, 500, 360, 4]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: kpi1-number
+    elementType: text
+    bounds: [80, 525, 200, 65]
+    content:
+      style: "$bigNumber"
+      fontSize: 52
+      wrap: false
+      text: |
+        <p>15,000+</p>
+
+  - elementId: kpi1-label
+    elementType: text
+    bounds: [80, 595, 300, 30]
+    content:
+      style: "$caption"
+      fontSize: 16
+      text: |
+        <p>Regisztrált felhasználó</p>
+
+  - elementId: kpi2-bg
+    elementType: shape
+    bounds: [450, 500, 360, 150]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+
+  - elementId: kpi2-accent
+    elementType: shape
+    bounds: [450, 500, 360, 4]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: kpi2-number
+    elementType: text
+    bounds: [470, 525, 200, 65]
+    content:
+      style: "$bigNumber"
+      fontSize: 52
+      color: "$accent"
+      wrap: false
+      text: |
+        <p>68%</p>
+
+  - elementId: kpi2-label
+    elementType: text
+    bounds: [470, 595, 300, 30]
+    content:
+      style: "$caption"
+      fontSize: 16
+      text: |
+        <p>AI tipp sikerességi arány</p>
+
+  - elementId: kpi3-bg
+    elementType: shape
+    bounds: [840, 500, 380, 150]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+
+  - elementId: kpi3-accent
+    elementType: shape
+    bounds: [840, 500, 380, 4]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$gold"
+
+  - elementId: kpi3-number
+    elementType: text
+    bounds: [860, 525, 250, 65]
+    content:
+      style: "$bigNumber"
+      fontSize: 52
+      color: "$gold"
+      wrap: false
+      text: |
+        <p>2.4M+</p>
+
+  - elementId: kpi3-label
+    elementType: text
+    bounds: [860, 595, 300, 30]
+    content:
+      style: "$caption"
+      fontSize: 16
+      text: |
+        <p>Elemzett mérkőzés</p>
+
+  - elementId: page-num
+    elementType: text
+    bounds: [1200, 690, 50, 20]
+    content:
+      fontSize: 12
+      color: "$secondary"
+      fontFamily: "MiSans"
+      align: [right, middle]
+      wrap: false
+      text: |
+        <p>02</p>

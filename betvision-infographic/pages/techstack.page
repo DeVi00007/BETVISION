@@ -1,0 +1,205 @@
+pageType: content
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [60, 25, 300, 20]
+    content:
+      style: "$label"
+      text: |
+        <p>TECHNOLÓGIA</p>
+      wrap: false
+
+  - elementId: page-title
+    elementType: text
+    bounds: [60, 50, 700, 55]
+    content:
+      style: "$title"
+      fontSize: 36
+      text: |
+        <p>Modern Technológiai Stack</p>
+      wrap: false
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [60, 110, 120, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 3, color: "$primary"}
+
+  - elementId: frontend-bg
+    elementType: shape
+    bounds: [60, 135, 555, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: frontend-icon
+    elementType: icon
+    bounds: [85, 155, 36, 36]
+    iconName: "fas:desktop"
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: frontend-title
+    elementType: text
+    bounds: [135, 155, 250, 35]
+    content:
+      fontSize: 22
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Frontend</p>
+
+  - elementId: frontend-body
+    elementType: text
+    bounds: [85, 200, 510, 150]
+    content:
+      style: "$body"
+      fontSize: 18
+      lineHeight: 1.6
+      text: |
+        <p><span style="color:#00FF94;">React 19</span> + TypeScript + Vite</p>
+        <p><span style="color:#00FF94;">Tailwind CSS</span> — Utility-first styling</p>
+        <p><span style="color:#00FF94;">React Router</span> — SPA routing</p>
+        <p><span style="color:#00FF94;">Zustand</span> — Lightweight state management</p>
+
+  - elementId: three-bg
+    elementType: shape
+    bounds: [645, 135, 575, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: three-icon
+    elementType: icon
+    bounds: [670, 155, 36, 36]
+    iconName: "fas:cube"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: three-title
+    elementType: text
+    bounds: [720, 155, 300, 35]
+    content:
+      fontSize: 22
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>3D / WebGL</p>
+
+  - elementId: three-body
+    elementType: text
+    bounds: [670, 200, 530, 150]
+    content:
+      style: "$body"
+      fontSize: 18
+      lineHeight: 1.6
+      text: |
+        <p><span style="color:#00CCFF;">Three.js</span> — WebGL 3D motor</p>
+        <p><span style="color:#00CCFF;">React Three Fiber</span> — Deklaratív 3D</p>
+        <p><span style="color:#00CCFF;">Drei</span> — R3F helper komponensek</p>
+        <p><span style="color:#00CCFF;">Postprocessing</span> — Bloom, glow effektek</p>
+
+  - elementId: anim-bg
+    elementType: shape
+    bounds: [60, 400, 555, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: anim-icon
+    elementType: icon
+    bounds: [85, 420, 36, 36]
+    iconName: "fas:chart-line"
+    fill:
+      type: solid
+      color: "$gold"
+
+  - elementId: anim-title
+    elementType: text
+    bounds: [135, 420, 300, 35]
+    content:
+      fontSize: 22
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Animáció</p>
+
+  - elementId: anim-body
+    elementType: text
+    bounds: [85, 465, 510, 150]
+    content:
+      style: "$body"
+      fontSize: 18
+      lineHeight: 1.6
+      text: |
+        <p><span style="color:#FFD700;">GSAP</span> — ScrollTrigger, timeline-ok</p>
+        <p><span style="color:#FFD700;">Lenis</span> — Smooth scroll, inercia</p>
+        <p><span style="color:#FFD700;">CSS Keyframes</span> — Pulse, float, flash</p>
+        <p><span style="color:#FFD700;">IntersectionObserver</span> — Entrance triggers</p>
+
+  - elementId: data-bg
+    elementType: shape
+    bounds: [645, 400, 575, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: data-icon
+    elementType: icon
+    bounds: [670, 420, 36, 36]
+    iconName: "fas:database"
+    fill:
+      type: solid
+      color: "#FF3366"
+
+  - elementId: data-title
+    elementType: text
+    bounds: [720, 420, 300, 35]
+    content:
+      fontSize: 22
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Adat & Vizualizáció</p>
+
+  - elementId: data-body
+    elementType: text
+    bounds: [670, 465, 530, 150]
+    content:
+      style: "$body"
+      fontSize: 18
+      lineHeight: 1.6
+      text: |
+        <p><span style="color:#FF3366;">Mock JSON</span> — Szimulált odds adatok</p>
+        <p><span style="color:#FF3366;">WebSocket szim.</span> — Élő odds frissítés</p>
+        <p><span style="color:#FF3366;">SVG/Canvas</span> — Egyedi diagramok</p>
+        <p><span style="color:#FF3366;">JetBrains Mono</span> — Számok, odds-ok</p>
+
+  - elementId: page-num
+    elementType: text
+    bounds: [1200, 690, 50, 20]
+    content:
+      fontSize: 12
+      color: "$secondary"
+      fontFamily: "MiSans"
+      align: [right, middle]
+      wrap: false
+      text: |
+        <p>04</p>

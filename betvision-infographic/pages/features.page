@@ -1,0 +1,331 @@
+pageType: content
+background:
+  type: solid
+  color: "$background"
+elements:
+  - elementId: page-label
+    elementType: text
+    bounds: [60, 25, 300, 20]
+    content:
+      style: "$label"
+      text: |
+        <p>INNOVÁCIÓK</p>
+      wrap: false
+
+  - elementId: page-title
+    elementType: text
+    bounds: [60, 50, 1000, 55]
+    content:
+      style: "$title"
+      fontSize: 36
+      text: |
+        <p>5 Innováció, Amivel Nincs Versenytársunk</p>
+      wrap: false
+
+  - elementId: title-accent
+    elementType: shape
+    bounds: [60, 110, 120, 0]
+    shapeName: straightConnector1
+    border: {style: solid, width: 3, color: "$primary"}
+
+  - elementId: f1-bg
+    elementType: shape
+    bounds: [60, 130, 370, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: f1-top
+    elementType: shape
+    bounds: [60, 130, 370, 4]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: f1-num
+    elementType: text
+    bounds: [75, 148, 70, 50]
+    content:
+      fontSize: 40
+      color: "$primary"
+      fontFamily: "Jersey15"
+      wrap: false
+      text: |
+        <p>01</p>
+
+  - elementId: f1-icon
+    elementType: icon
+    bounds: [350, 148, 32, 32]
+    iconName: "fas:brain"
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: f1-title
+    elementType: text
+    bounds: [75, 200, 320, 30]
+    content:
+      fontSize: 20
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>AI Prediktív Analitika</p>
+
+  - elementId: f1-body
+    elementType: text
+    bounds: [75, 235, 320, 110]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>Neurális hálózataink 200+ változót elemeznek: forma, sérülések, időjárás, motiváció, történelmi adatok.</p>
+
+  - elementId: f2-bg
+    elementType: shape
+    bounds: [455, 130, 370, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: f2-top
+    elementType: shape
+    bounds: [455, 130, 370, 4]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: f2-num
+    elementType: text
+    bounds: [470, 148, 70, 50]
+    content:
+      fontSize: 40
+      color: "$accent"
+      fontFamily: "Jersey15"
+      wrap: false
+      text: |
+        <p>02</p>
+
+  - elementId: f2-icon
+    elementType: icon
+    bounds: [745, 148, 32, 32]
+    iconName: "fas:search-dollar"
+    fill:
+      type: solid
+      color: "$accent"
+
+  - elementId: f2-title
+    elementType: text
+    bounds: [470, 200, 320, 30]
+    content:
+      fontSize: 20
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Értékkereső Rendszer</p>
+
+  - elementId: f2-body
+    elementType: text
+    bounds: [470, 235, 320, 110]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>Az AI azonnal felismeri az alul- és túlértékelt oddsokat. Ha a bookmaker hibázik, mi észrevesszük.</p>
+
+  - elementId: f3-bg
+    elementType: shape
+    bounds: [850, 130, 370, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: f3-top
+    elementType: shape
+    bounds: [850, 130, 370, 4]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$gold"
+
+  - elementId: f3-num
+    elementType: text
+    bounds: [865, 148, 70, 50]
+    content:
+      fontSize: 40
+      color: "$gold"
+      fontFamily: "Jersey15"
+      wrap: false
+      text: |
+        <p>03</p>
+
+  - elementId: f3-icon
+    elementType: icon
+    bounds: [1140, 148, 32, 32]
+    iconName: "fas:chart-bar"
+    fill:
+      type: solid
+      color: "$gold"
+
+  - elementId: f3-title
+    elementType: text
+    bounds: [865, 200, 320, 30]
+    content:
+      fontSize: 20
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Élő Mérkőzés Elemzés</p>
+
+  - elementId: f3-body
+    elementType: text
+    bounds: [865, 235, 320, 110]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>Mérkőzés közben is elemezünk: gólhelyzetek, labdabirtoklás, támadási statisztikák alapján adunk élő tippeket.</p>
+
+  - elementId: f4-bg
+    elementType: shape
+    bounds: [60, 400, 555, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: f4-top
+    elementType: shape
+    bounds: [60, 400, 555, 4]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "#FF3366"
+
+  - elementId: f4-num
+    elementType: text
+    bounds: [75, 418, 70, 50]
+    content:
+      fontSize: 40
+      color: "#FF3366"
+      fontFamily: "Jersey15"
+      wrap: false
+      text: |
+        <p>04</p>
+
+  - elementId: f4-icon
+    elementType: icon
+    bounds: [530, 418, 32, 32]
+    iconName: "fas:calculator"
+    fill:
+      type: solid
+      color: "#FF3366"
+
+  - elementId: f4-title
+    elementType: text
+    bounds: [75, 470, 490, 30]
+    content:
+      fontSize: 20
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Profi Kalkulátor</p>
+
+  - elementId: f4-body
+    elementType: text
+    bounds: [75, 505, 490, 110]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>Szelvény szimuláció valós oddsokkal, bankroll menedzsment, Kelly-kritérium, Martingale és Flat tétstratégiák. Automatikus nyereményszámítás.</p>
+
+  - elementId: f5-bg
+    elementType: shape
+    bounds: [645, 400, 575, 240]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$surface"
+    border: {style: solid, width: 1, color: "$border"}
+
+  - elementId: f5-top
+    elementType: shape
+    bounds: [645, 400, 575, 4]
+    shapeName: rect
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: f5-num
+    elementType: text
+    bounds: [660, 418, 70, 50]
+    content:
+      fontSize: 40
+      color: "$primary"
+      fontFamily: "Jersey15"
+      wrap: false
+      text: |
+        <p>05</p>
+
+  - elementId: f5-icon
+    elementType: icon
+    bounds: [1140, 418, 32, 32]
+    iconName: "fas:trophy"
+    fill:
+      type: solid
+      color: "$primary"
+
+  - elementId: f5-title
+    elementType: text
+    bounds: [660, 470, 530, 30]
+    content:
+      fontSize: 20
+      color: "$text"
+      fontFamily: "Liter"
+      wrap: false
+      text: |
+        <p>Közösségi Ranglista</p>
+
+  - elementId: f5-body
+    elementType: text
+    bounds: [660, 505, 530, 110]
+    content:
+      fontSize: 16
+      color: "#BBBBBB"
+      fontFamily: "MiSans"
+      lineHeight: 1.5
+      text: |
+        <p>Gamification a sportfogadásban: heti/havi/éves ranglista, streak mutatók, profit faktor. Prémium és ingyenes felhasználói szintek.</p>
+
+  - elementId: page-num
+    elementType: text
+    bounds: [1200, 690, 50, 20]
+    content:
+      fontSize: 12
+      color: "$secondary"
+      fontFamily: "MiSans"
+      align: [right, middle]
+      wrap: false
+      text: |
+        <p>05</p>
