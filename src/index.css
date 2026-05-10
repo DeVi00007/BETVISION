@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 40% 8%;
+    --foreground: 210 40% 98%;
+    --card: 220 30% 12%;
+    --card-foreground: 210 40% 98%;
+    --popover: 220 30% 12%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 193 100% 50%;
+    --primary-foreground: 220 40% 8%;
+    --secondary: 220 30% 12%;
+    --secondary-foreground: 215 20% 65%;
+    --muted: 220 25% 15%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 193 100% 50%;
+    --accent-foreground: 220 40% 8%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 30% 18%;
+    --input: 217 30% 18%;
+    --ring: 193 100% 50%;
+    --radius: 0.625rem;
+  }
+
+  * {
+    @apply border-bv-border-subtle;
+  }
+
+  body {
+    @apply bg-bv-bg text-bv-text font-inter antialiased;
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0B1120;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1E3A5F;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #38BDF8;
+  }
+}
+
+@layer components {
+  .section-padding {
+    @apply py-20 md:py-28 lg:py-32;
+  }
+
+  .content-max-width {
+    @apply max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(135deg, #00D4FF 0%, #38BDF8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+  }
+}
+
+@layer utilities {
+  .font-mono-numbers {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
