@@ -218,13 +218,13 @@ export async function fetchLiveMatches(): Promise<ConvertedMatch[]> {
   if (cached) return cached;
 
   try {
-    const data = await getLiveMatches<ApiFixtureResponse>();
+    const data = await getLiveMatches();
     if (!data) {
       console.warn('[API-Football] Élő mérkőzések lekérdezése sikertelen, fallback mock adatokra');
       return mockMatches.map((m) => ({ ...m, fixtureId: parseInt(m.id.replace('m', '')) || 0, leagueId: 0 }));
     }
 
-    const matches = (data as unknown as any[]).map((f) => convertFixtureToMatch(f));
+    const matches = data.map((f) => convertFixtureToMatch(f));
     setCachedData('live_matches', matches);
     return matches;
   } catch (error) {
@@ -247,17 +247,16 @@ export async function fetchUpcomingMatches(
   if (cached) return cached;
 
   try {
-    const data = await getFixtures<ApiFixtureResponse>(date, leagueId);
+    const data = await getFixtures(date, leagueId);
     if (!data) {
       console.warn('[API-Football] Közelgő mérkőzések lekérdezése sikertelen, fallback mock adatokra');
       return mockMatches.map((m) => ({ ...m, fixtureId: parseInt(m.id.replace('m', '')) || 0, leagueId: 0 }));
     }
 
     // Csak a top bajnokságok meccseit szűrjük
-    const fixturesArray = data as unknown as any[];
     const filtered = leagueId
-      ? fixturesArray
-      : fixturesArray.filter((f) => TOP_LEAGUE_IDS.includes(f.league?.id));
+      ? data
+      : data.filter((f) => TOP_LEAGUE_IDS.includes(f.league?.id));
 
     // Odds-ok lekérdezése az első 6 meccshez (rate limit miatt nem mindegyikhez)
     const matchesWithOdds: ConvertedMatch[] = [];
@@ -286,7 +285,7 @@ export async function fetchOddsForFixture(
   if (cached) return cached;
 
   try {
-    const data = await getOdds<ApiOddsResponse>(fixtureId);
+    const data = await getOdds(fixtureId);
     if (!data) return null;
 
     const converted = convertOddsResponse(data);
@@ -314,7 +313,7 @@ export async function fetchLeagues(): Promise<ApiLeagueResponse[]> {
   if (cached) return cached;
 
   try {
-    const data = await getLeagues<ApiLeagueResponse>();
+    const data = await getLeagues();
     if (!data) return [];
 
     // Csak a top bajnokságok
@@ -343,7 +342,7 @@ export async function fetchMatchStatistics(
   if (cached) return cached;
 
   try {
-    const data = await getFixtureStatistics<ApiFixtureStatistics>(fixtureId);
+    const data = await getFixtureStatistics(fixtureId);
     if (!data) return null;
 
     const stats = data;
@@ -416,7 +415,7 @@ export async function fetchFixtureById(
 ): Promise<ConvertedMatch | null> {
   try {
     const today = new Date().toISOString().split('T')[0];
-    const data = await getFixtures<ApiFixtureResponse>(today);
+    const data = await getFixtures(today);
     if (!data) return null;
 
     const fixture = data.find((f) => f.fixture.id === fixtureId);

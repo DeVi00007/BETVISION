@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Bell } from 'lucide-react';
+import DonationButton from './DonationButton';
 
 const navLinks = [
   { label: 'ÉLŐ ODDS', path: '/#live-odds' },
@@ -69,6 +70,7 @@ export default function Navigation() {
           <button className="hidden md:block text-bv-text-secondary hover:text-white text-sm transition-colors">
             BELÉPÉS
           </button>
+          <DonationButton variant="outline" className="hidden md:block" />
           <button className="hidden md:block bg-bv-blue text-bv-bg text-sm font-semibold px-5 py-2 rounded-full hover:brightness-110 transition-all">
             REGISZTRÁCIÓ
           </button>

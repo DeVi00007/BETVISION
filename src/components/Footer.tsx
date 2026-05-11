@@ -10,10 +10,10 @@ const pageLinks = [
 ];
 
 const legalLinks = [
-  'ÁSZF',
-  'Adatvédelem',
-  'Felelősség',
-  'Cookie szabályzat',
+  { label: 'ÁSZF', path: '/aszf' },
+  { label: 'Adatvédelem', path: '/adatvedelem' },
+  { label: 'Felelősség', path: '/felelosseg' },
+  { label: 'Cookie szabályzat', path: '/suti-szabalyzat' },
 ];
 
 export default function Footer() {
@@ -58,10 +58,12 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-4">Jogi</h4>
             <ul className="space-y-2">
               {legalLinks.map((link) => (
-                <li key={link}>
-                  <span className="text-bv-text-secondary text-sm hover:text-bv-blue transition-colors cursor-pointer">
-                    {link}
-                  </span>
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    className="text-bv-text-secondary text-sm hover:text-bv-blue transition-colors cursor-pointer">
+                    {link.label}
+                  </Link>
                 </li>
               ))}
             </ul>

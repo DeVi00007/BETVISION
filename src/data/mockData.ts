@@ -15,6 +15,8 @@ export interface Match {
   aiPick: string;
   markets: number;
   sport: string;
+  homeTeamLogo?: string;
+  awayTeamLogo?: string;
 }
 
 export interface AITip {

@@ -3,7 +3,7 @@ import {
   HelpCircle,
   Settings,
   BarChart3,
-  Globe,         
+  Globe,
   Table,
 } from 'lucide-react';
 
