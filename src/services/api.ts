@@ -8,6 +8,38 @@ const API_KEY = 'c2e659119f7d1c12b7bb8768fa0a9a2f';
 let lastRequestTime = 0;
 const MIN_REQUEST_INTERVAL = 500;
 
+// ============================================================
+// Cache System
+// ============================================================
+
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+}
+
+const cache = new Map<string, CacheEntry<any>>();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 percig cache
+
+export function getCachedData<T>(key: string): T | null {
+  const entry = cache.get(key);
+  if (!entry) return null;
+
+  const now = Date.now();
+  if (now - entry.timestamp > CACHE_DURATION) {
+    cache.delete(key);
+    return null;
+  }
+
+  return entry.data as T;
+}
+
+export function setCachedData<T>(key: string, data: T): void {
+  cache.set(key, {
+    data,
+    timestamp: Date.now(),
+  });
+}
+
 async function enforceRateLimit(): Promise<void> {
   const now = Date.now();
   const timeSinceLastRequest = now - lastRequestTime;
@@ -87,20 +119,24 @@ export async function getFixtures(
   });
 }
 
-export async function getOdds(fixtureId: number): Promise<any[] | null> {
-  return apiCall('odds', {
+export async function getOdds(fixtureId: number): Promise<any | null> {
+  const response = await apiCall('odds', {
     fixture: fixtureId,
     bet: 1,
     bookmaker: 1,
   });
+  // Az API odds endpointja tömböt ad vissza, az első elem az odds adat
+  return response && response.length > 0 ? response[0] : null;
 }
 
 export async function getLeagues(): Promise<any[] | null> {
   return apiCall('leagues');
 }
 
-export async function getFixtureStatistics(fixtureId: number): Promise<any[] | null> {
-  return apiCall('fixtures/statistics', { fixture: fixtureId });
+export async function getFixtureStatistics(fixtureId: number): Promise<any | null> {
+  const response = await apiCall('fixtures/statistics', { fixture: fixtureId });
+  // Az API statistics endpointja tömböt ad vissza, az első elem a stats adat
+  return response && response.length > 0 ? response[0] : null;
 }
 
 export async function getFixtureEvents(fixtureId: number): Promise<any[] | null> {

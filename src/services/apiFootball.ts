@@ -17,7 +17,6 @@ import type {
   ApiFixtureResponse,
   ApiOddsResponse,
   ApiLeagueResponse,
-  ApiFixtureStatistics,
   ConvertedMatch,
   ConvertedOdds,
   MatchStatistics,
@@ -318,7 +317,7 @@ export async function fetchLeagues(): Promise<ApiLeagueResponse[]> {
 
     // Csak a top bajnokságok
     const filtered = data.filter(
-      (l) =>
+      (l: ApiLeagueResponse) =>
         TOP_LEAGUE_IDS.includes(l.league.id) &&
         l.seasons.some((s) => s.current)
     );
@@ -352,7 +351,7 @@ export async function fetchMatchStatistics(
     const awayStats = stats.teams.away.statistics;
 
     const getStat = (statsArr: typeof homeStats, type: string): number | null => {
-      const item = statsArr.find((s) => s.type === type);
+      const item = statsArr.find((s: any) => s.type === type);
       return item?.value ?? null;
     };
 
