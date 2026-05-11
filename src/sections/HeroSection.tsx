@@ -48,7 +48,7 @@ export default function HeroSection() {
           <a
             href="/ai-tippek"
             className="bg-bv-blue text-bv-bg font-semibold text-base px-8 py-4 rounded-lg hover:brightness-110 transition-all hover:scale-[1.02] shadow-glow-blue">
-            INGYENES AI TIPPEK
+            AI TIPPEK MEGTEKINTÉSE
           </a>
           <a
             href="/kalkulator"

@@ -11,7 +11,7 @@ import ASZFPage from '@/pages/ASZFPage';
 import PrivacyPage from '@/pages/PrivacyPage';
 import CookiePage from '@/pages/CookiePage';
 import FelelossegPage from '@/pages/FelelossegPage';
-import DonationPage from '@/pages/DonationPage';
+import SubscriptionPage from '@/pages/SubscriptionPage';
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -38,7 +38,7 @@ function App() {
           <Route path="/adatvedelem" element={<PrivacyPage />} />
           <Route path="/suti-szabalyzat" element={<CookiePage />} />
           <Route path="/felelosseg" element={<FelelossegPage />} />
-          <Route path="/tamogatas" element={<DonationPage />} />
+          <Route path="/elofizetes" element={<SubscriptionPage />} />
         </Routes>
       </Layout>
     </BrowserRouter>

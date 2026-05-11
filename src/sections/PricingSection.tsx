@@ -3,7 +3,7 @@ import SectionHeader from '@/components/SectionHeader';
 
 const plans = [
   {
-    name: 'INGYENES',
+    name: 'ALAP',
     price: '0',
     period: 'Ft / hónap',
     icon: Sparkles,
@@ -77,7 +77,7 @@ export default function PricingSection() {
       <div className="content-max-width">
         <SectionHeader
           title="ÁRAZÁS"
-          subtitle="Válaszd a számodra megfelelő csomagot. Ingyenes tippmix tippek minden nap."
+          subtitle="Válaszd a számodra megfelelő csomagot. Prémium AI elemzések minden nap."
           centered
         />
 
