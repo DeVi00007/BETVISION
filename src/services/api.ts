@@ -1,9 +1,12 @@
 /**
- * API Service modul - api-football.com integráció
+ * API Service modul - Vercel proxy-n keresztüli api-football.com integráció
+ * 
+ * A böngészőből a /api/sports proxy endpoint-ot hívja,
+ * ami Vercel serverless function-ként továbbítja a kéréseket.
+ * Az API kulcs nem kerül ki a frontendre.
  */
 
-const API_BASE_URL = 'https://v3.football.api-sports.io';
-const API_KEY = 'c2e659119f7d1c12b7bb8768fa0a9a2f';
+const PROXY_BASE_URL = '/api/sports';
 
 let lastRequestTime = 0;
 const MIN_REQUEST_INTERVAL = 500;
@@ -59,6 +62,7 @@ async function apiCall(
     await enforceRateLimit();
 
     const queryParams = new URLSearchParams();
+    queryParams.append('endpoint', endpoint);
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null && value !== '') {
@@ -67,13 +71,11 @@ async function apiCall(
       });
     }
 
-    const url = `${API_BASE_URL}/${endpoint}${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+    const url = `${PROXY_BASE_URL}?${queryParams.toString()}`;
 
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'x-rapidapi-host': 'v3.football.api-sports.io',
-        'x-rapidapi-key': API_KEY,
         'Content-Type': 'application/json',
       },
     });
@@ -125,7 +127,6 @@ export async function getOdds(fixtureId: number): Promise<any | null> {
     bet: 1,
     bookmaker: 1,
   });
-  // Az API odds endpointja tömböt ad vissza, az első elem az odds adat
   return response && response.length > 0 ? response[0] : null;
 }
 
@@ -135,7 +136,6 @@ export async function getLeagues(): Promise<any[] | null> {
 
 export async function getFixtureStatistics(fixtureId: number): Promise<any | null> {
   const response = await apiCall('fixtures/statistics', { fixture: fixtureId });
-  // Az API statistics endpointja tömböt ad vissza, az első elem a stats adat
   return response && response.length > 0 ? response[0] : null;
 }
 
