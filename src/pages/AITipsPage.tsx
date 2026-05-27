@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Plus, ChevronDown, Lock, RefreshCw, WifiOff } from 'lucide-react';
 import { useAITips } from '@/hooks/useAITips';
 import { aiPerformance } from '@/data/mockData';
 import { useBetSlipStore } from '@/stores/betSlipStore';
 import AIConfidenceBadge from '@/components/AIConfidenceBadge';
 import RiskProfileSelector from '@/components/RiskProfileSelector';
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
+import PremiumUpgradeLink from '@/components/PremiumUpgradeLink';
 
 const sportFilters = ['ÖSSZES', 'LABDARÚGÁS', 'TENISZ', 'KOSÁRLABDA', 'JÉGKORONG', 'E-SPORT'];
 
 function getFormDots(form: string) {
   return form.split('').map((char, i) => {
-    const color =
-      char === 'W' ? 'bg-bv-blue' : char === 'D' ? 'bg-yellow-500' : 'bg-bv-orange';
+    const color = char === 'W' ? 'bg-bv-blue' : char === 'D' ? 'bg-yellow-500' : 'bg-bv-orange';
     return <span key={i} className={`w-2 h-2 rounded-full ${color}`} />;
   });
 }
@@ -24,6 +25,9 @@ export default function AITipsPage() {
   const [activeFilter, setActiveFilter] = useState('ÖSSZES');
   const [expandedTip, setExpandedTip] = useState<string | null>(null);
   const { addItem } = useBetSlipStore();
+
+  const { status } = useSubscriptionStatus(7);
+  const canExpandAnalysis = status.effectiveTier !== 'ALAP';
 
   const {
     tips,
@@ -51,6 +55,11 @@ export default function AITipsPage() {
     return `${minutes} perce`;
   };
 
+  // Ha lejár a trial / visszaesik ALAP-ra, zárjuk az expanded állapotot.
+  useEffect(() => {
+    if (!canExpandAnalysis) setExpandedTip(null);
+  }, [canExpandAnalysis]);
+
   return (
     <div className="pt-[72px] min-h-screen bg-bv-bg">
       {/* Hero */}
@@ -69,7 +78,9 @@ export default function AITipsPage() {
 
         {/* AI Kockázati Profil */}
         <div className="max-w-3xl mx-auto mb-10">
-          <p className="text-bv-text-muted text-sm uppercase tracking-wider mb-4">Válaszd ki a kockázati szintedet</p>
+          <p className="text-bv-text-muted text-sm uppercase tracking-wider mb-4">
+            Válaszd ki a kockázati szintedet
+          </p>
           <RiskProfileSelector />
         </div>
 
@@ -106,7 +117,8 @@ export default function AITipsPage() {
                 activeFilter === filter
                   ? 'bg-bv-blue text-bv-bg'
                   : 'bg-bv-bg-tertiary text-bv-text-secondary hover:text-white border border-bv-border-subtle'
-              }`}>
+              }`}
+            >
               {filter}
             </button>
           ))}
@@ -158,14 +170,13 @@ export default function AITipsPage() {
               <div
                 key={tip.id}
                 className="bg-bv-bg-tertiary border border-bv-border-subtle rounded-xl p-5 md:p-6 hover:-translate-y-0.5 transition-all duration-300"
-                style={{ animationDelay: `${idx * 80}ms` }}>
+                style={{ animationDelay: `${idx * 80}ms` }}
+              >
                 {/* Top row */}
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">⚽</span>
-                    <span className="text-xs text-bv-text-muted uppercase tracking-wider">
-                      {tip.league}
-                    </span>
+                    <span className="text-xs text-bv-text-muted uppercase tracking-wider">{tip.league}</span>
                   </div>
                   <span className="text-xs text-bv-text-muted">{tip.time}</span>
                 </div>
@@ -184,9 +195,7 @@ export default function AITipsPage() {
                     AI Választás:{''}
                     <span className="text-bv-blue ml-1">{tip.aiPick}</span>
                   </span>
-                  <span className="font-mono text-2xl md:text-3xl font-bold text-bv-blue">
-                    {tip.odds.toFixed(2)}
-                  </span>
+                  <span className="font-mono text-2xl md:text-3xl font-bold text-bv-blue">{tip.odds.toFixed(2)}</span>
                   {/* Blockchain Audit Badge */}
                   <span className="flex items-center gap-1.5 bg-bv-blue-light/10 border border-bv-blue-light/30 rounded-full px-3 py-1">
                     <Lock size={12} className="text-bv-blue-light" />
@@ -199,21 +208,28 @@ export default function AITipsPage() {
                   <p
                     className={`text-bv-text-secondary text-sm leading-relaxed ${
                       expandedTip === tip.id ? '' : 'line-clamp-2'
-                    }`}>
+                    }`}
+                  >
                     {tip.analysis}
                   </p>
+
                   {tip.analysis.length > 120 && (
-                    <button
-                      onClick={() =>
-                        setExpandedTip(expandedTip === tip.id ? null : tip.id)
-                      }
-                      className="text-bv-blue text-xs mt-1 hover:underline flex items-center gap-1">
-                      {expandedTip === tip.id ? 'Kevesebb' : 'Mutass többet'}
-                      <ChevronDown
-                        size={12}
-                        className={`transition-transform ${expandedTip === tip.id ? 'rotate-180' : ''}`}
-                      />
-                    </button>
+                    canExpandAnalysis ? (
+                      <button
+                        onClick={() =>
+                          setExpandedTip(expandedTip === tip.id ? null : tip.id)
+                        }
+                        className="text-bv-blue text-xs mt-1 hover:underline flex items-center gap-1"
+                      >
+                        {expandedTip === tip.id ? 'Kevesebb' : 'Mutass többet'}
+                        <ChevronDown
+                          size={12}
+                          className={`transition-transform ${expandedTip === tip.id ? 'rotate-180' : ''}`}
+                        />
+                      </button>
+                    ) : (
+                      <PremiumUpgradeLink text="PRO kell a teljes elemzéshez" />
+                    )
                   )}
                 </div>
 
@@ -243,7 +259,8 @@ export default function AITipsPage() {
                       odds: tip.odds,
                     })
                   }
-                  className="inline-flex items-center gap-2 border border-bv-blue/40 text-bv-blue text-sm px-4 py-2 rounded-lg hover:bg-bv-blue/10 transition-all">
+                  className="inline-flex items-center gap-2 border border-bv-blue/40 text-bv-blue text-sm px-4 py-2 rounded-lg hover:bg-bv-blue/10 transition-all"
+                >
                   <Plus size={14} />
                   Tipp hozzáadása a kalkulátorhoz
                 </button>
@@ -254,9 +271,7 @@ export default function AITipsPage() {
 
         {/* AI Performance Dashboard */}
         <div className="mt-16 bg-bv-bg-secondary rounded-2xl p-6 md:p-8">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-6">
-            AI TELJESÍTMÉNY
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-6">AI TELJESÍTMÉNY</h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {[
@@ -266,9 +281,7 @@ export default function AITipsPage() {
               { label: 'Profit faktor', value: aiPerformance.profitFactor.toFixed(2), color: 'text-bv-blue-light' },
             ].map((metric) => (
               <div key={metric.label} className="bg-bv-bg rounded-xl p-4 text-center">
-                <div className={`text-2xl md:text-3xl font-mono font-bold ${metric.color} mb-1`}>
-                  {metric.value}
-                </div>
+                <div className={`text-2xl md:text-3xl font-mono font-bold ${metric.color} mb-1`}>{metric.value}</div>
                 <div className="text-bv-text-muted text-xs">{metric.label}</div>
               </div>
             ))}
@@ -297,6 +310,7 @@ export default function AITipsPage() {
                   <stop offset="100%" stopColor="#00D4FF" stopOpacity="0" />
                 </linearGradient>
               </defs>
+
               {/* Build path from performance data */}
               {(() => {
                 const data = aiPerformance.dailyHistory;

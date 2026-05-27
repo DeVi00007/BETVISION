@@ -11,7 +11,9 @@ import ASZFPage from '@/pages/ASZFPage';
 import PrivacyPage from '@/pages/PrivacyPage';
 import CookiePage from '@/pages/CookiePage';
 import FelelossegPage from '@/pages/FelelossegPage';
+import TamogatasPage from '@/pages/TamogatasPage';
 import SubscriptionPage from '@/pages/SubscriptionPage';
+import SubscriptionDebugPanel from '@/components/SubscriptionDebugPanel';
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -28,6 +30,9 @@ function App() {
   return (
     <BrowserRouter>
       <Layout>
+        {new URLSearchParams(window.location.search).get('debugSubscription') === '1'
+          ? <SubscriptionDebugPanel />
+          : null}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/ai-tippek" element={<AITipsPage />} />
@@ -38,6 +43,7 @@ function App() {
           <Route path="/adatvedelem" element={<PrivacyPage />} />
           <Route path="/suti-szabalyzat" element={<CookiePage />} />
           <Route path="/felelosseg" element={<FelelossegPage />} />
+          <Route path="/tamogatas" element={<TamogatasPage />} />
           <Route path="/elofizetes" element={<SubscriptionPage />} />
         </Routes>
       </Layout>

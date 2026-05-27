@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Trophy, Medal, Flame } from 'lucide-react';
 import { leaderboardData } from '@/data/mockData';
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 
 const periods = ['HETI', 'HAVI', 'ÉVES', 'ÖRÖK'];
 
@@ -18,8 +19,40 @@ function getRankBg(rank: number) {
   return 'bg-bv-bg-tertiary border-bv-border-subtle';
 }
 
+function getLeaderboardEntriesForPeriod(period: string) {
+  const base = leaderboardData.map((e) => ({ ...e }));
+
+  switch (period) {
+    case 'HETI':
+      base.sort((a, b) => b.profit - a.profit);
+      break;
+    case 'HAVI':
+      base.sort((a, b) => b.streak - a.streak || b.profit - a.profit);
+      break;
+    case 'ÉVES':
+      base.sort((a, b) => b.winRate - a.winRate || b.profit - a.profit);
+      break;
+    case 'ÖRÖK':
+      base.sort((a, b) => a.avgOdds - b.avgOdds || b.profit - a.profit);
+      break;
+    default:
+      base.sort((a, b) => b.profit - a.profit);
+      break;
+  }
+
+  return base.map((e, idx) => ({ ...e, rank: idx + 1 }));
+}
+
 export default function LeaderboardPage() {
   const [activePeriod, setActivePeriod] = useState('HAVI');
+  const { status } = useSubscriptionStatus(7);
+
+  const canSeePremiumBadges = status.effectiveTier === 'PRO+';
+
+  const periodEntries = useMemo(
+    () => getLeaderboardEntriesForPeriod(activePeriod),
+    [activePeriod]
+  );
 
   return (
     <div className="pt-[72px] min-h-screen bg-bv-bg">
@@ -41,7 +74,8 @@ export default function LeaderboardPage() {
                 activePeriod === period
                   ? 'bg-bv-blue text-bv-bg'
                   : 'bg-bv-bg-tertiary text-bv-text-secondary hover:text-white border border-bv-border-subtle'
-              }`}>
+              }`}
+            >
               {period}
             </button>
           ))}
@@ -49,24 +83,49 @@ export default function LeaderboardPage() {
 
         {/* Top 3 Podium */}
         <div className="grid grid-cols-3 gap-4 mb-8 max-w-2xl mx-auto">
-          {[2, 1, 3].map((rank) => {
-            const entry = leaderboardData.find((e) => e.rank === rank);
-            if (!entry) return null;
+          {(() => {
+            const top3 = periodEntries.slice(0, 3); // már rankra rendezve
+            const podiumPositions = [
+              top3[1], // balra: #2
+              top3[0], // középre: #1
+              top3[2], // jobbra: #3
+            ].filter(Boolean);
+
             const heights = ['h-32', 'h-44', 'h-28'];
-            const colors = ['from-gray-300/20 to-transparent', 'from-yellow-400/20 to-transparent', 'from-amber-600/20 to-transparent'];
-            return (
-              <div key={rank} className="flex flex-col items-center">
-                <div className={`w-14 h-14 rounded-full bg-gradient-to-br flex items-center justify-center text-lg font-bold text-white mb-3 ${
-                  rank === 1 ? 'from-yellow-400 to-yellow-600' : rank === 2 ? 'from-gray-400 to-gray-600' : 'from-amber-600 to-amber-800'
-                }`}>
-                  {entry.avatar}
+            const colors = [
+              'from-gray-300/20 to-transparent',
+              'from-yellow-400/20 to-transparent',
+              'from-amber-600/20 to-transparent',
+            ];
+
+            return podiumPositions.map((entry, idx) => {
+              const podiumRank = entry.rank; // 1..3
+              const heightIdx = podiumRank - 1;
+
+              return (
+                <div key={`${entry.rank}-${idx}`} className="flex flex-col items-center">
+                  <div
+                    className={`w-14 h-14 rounded-full bg-gradient-to-br flex items-center justify-center text-lg font-bold text-white mb-3 ${
+                      podiumRank === 1
+                        ? 'from-yellow-400 to-yellow-600'
+                        : podiumRank === 2
+                          ? 'from-gray-400 to-gray-600'
+                          : 'from-amber-600 to-amber-800'
+                    }`}
+                  >
+                    {entry.avatar}
+                  </div>
+                  <span className="text-white text-sm font-semibold text-center truncate w-full">
+                    {entry.username}
+                  </span>
+                  <span className="font-mono text-bv-blue text-sm font-bold">+{entry.profit} egység</span>
+                  <div
+                    className={`w-full ${heights[heightIdx]} bg-gradient-to-t ${colors[heightIdx]} rounded-t-lg mt-3`}
+                  />
                 </div>
-                <span className="text-white text-sm font-semibold text-center truncate w-full">{entry.username}</span>
-                <span className="font-mono text-bv-blue text-sm font-bold">+{entry.profit} egység</span>
-                <div className={`w-full ${heights[rank - 1]} bg-gradient-to-t ${colors[rank - 1]} rounded-t-lg mt-3`} />
-              </div>
-            );
-          })}
+              );
+            });
+          })()}
         </div>
 
         {/* Table */}
@@ -84,14 +143,13 @@ export default function LeaderboardPage() {
 
           {/* Table Rows */}
           <div className="divide-y divide-bv-border-subtle">
-            {leaderboardData.map((entry) => (
+            {periodEntries.map((entry) => (
               <div
                 key={entry.rank}
-                className={`grid grid-cols-1 md:grid-cols-[60px_1fr_120px_100px_100px_80px_60px] gap-4 px-6 py-4 items-center border ${getRankBg(entry.rank)} transition-all hover:bg-white/5`}>
+                className={`grid grid-cols-1 md:grid-cols-[60px_1fr_120px_100px_100px_80px_60px] gap-4 px-6 py-4 items-center border ${getRankBg(entry.rank)} transition-all hover:bg-white/5`}
+              >
                 {/* Rank */}
-                <div className="flex items-center gap-2">
-                  {getRankIcon(entry.rank)}
-                </div>
+                <div className="flex items-center gap-2">{getRankIcon(entry.rank)}</div>
 
                 {/* User */}
                 <div className="flex items-center gap-3">
@@ -100,7 +158,7 @@ export default function LeaderboardPage() {
                   </div>
                   <div>
                     <span className="text-white text-sm font-semibold">{entry.username}</span>
-                    {entry.isPremium && (
+                    {entry.isPremium && canSeePremiumBadges && (
                       <span className="ml-2 text-[10px] bg-bv-blue/20 text-bv-blue px-1.5 py-0.5 rounded font-medium">
                         PRO
                       </span>

@@ -13,6 +13,9 @@ import { useMatches } from '@/hooks/useMatches';
 import { fetchMatchStatistics } from '@/services/apiFootball';
 import type { MatchStatistics } from '@/types/api';
 import AIConfidenceBadge from '@/components/AIConfidenceBadge';
+import PremiumUpgradeLink from '@/components/PremiumUpgradeLink';
+
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 
 const tabs = ['ÁTTEKINTÉS', 'STATISZTIKA', 'AI ELEMZÉS', 'H2H', 'KERESZT'];
 
@@ -43,13 +46,26 @@ const h2hHistory = [
  */
 export default function AnalyticsPage() {
   const { matchId } = useParams();
-  const [activeTab, setActiveTab] = useState('AI ELEMZÉS');
+  const [activeTab, setActiveTab] = useState('STATISZTIKA');
   const [stats, setStats] = useState<MatchStatistics>(defaultStats);
   const [statsLoading, setStatsLoading] = useState(false);
   const [statsError, setStatsError] = useState<string | null>(null);
 
   // Mérkőzések lekérdezése a hookon keresztül
   const { matches, loading: matchesLoading } = useMatches({ limit: 10 });
+
+  const { status } = useSubscriptionStatus(7);
+  const canExpandAiAnalysis = status.effectiveTier !== 'ALAP';
+  const isAiLocked = !canExpandAiAnalysis;
+
+  useEffect(() => {
+    if (canExpandAiAnalysis) {
+      if (activeTab === 'STATISZTIKA') setActiveTab('AI ELEMZÉS');
+      return;
+    }
+
+    if (activeTab === 'AI ELEMZÉS') setActiveTab('STATISZTIKA');
+  }, [canExpandAiAnalysis, activeTab]);
 
   // Aktuális mérkőzés megtalálása
   const match = matches.find((m) => m.id === matchId) || matches[0] || {
@@ -229,182 +245,238 @@ export default function AnalyticsPage() {
 
         {/* Tabs */}
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
-                activeTab === tab
-                  ? 'bg-bv-blue text-bv-bg'
-                  : 'bg-bv-bg-tertiary text-bv-text-secondary hover:text-white border border-bv-border-subtle'
-              }`}>
-              {tab}
-            </button>
-          ))}
+          {tabs.map((tab) => {
+            const isAiTab = tab === 'AI ELEMZÉS';
+            const isTabLocked = isAiTab && isAiLocked;
+
+            return (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => {
+                  if (isTabLocked) return;
+                  setActiveTab(tab);
+                }}
+                disabled={isTabLocked}
+                aria-disabled={isTabLocked}
+                className={`px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+                  activeTab === tab
+                    ? 'bg-bv-blue text-bv-bg'
+                    : 'bg-bv-bg-tertiary text-bv-text-secondary hover:text-white border border-bv-border-subtle'
+                } ${isTabLocked ? 'opacity-60 cursor-not-allowed hover:text-bv-text-secondary' : ''}`}
+              >
+                {tab}
+              </button>
+            );
+          })}
         </div>
 
         {/* Tab Content */}
         {activeTab === 'AI ELEMZÉS' && (
           <div className="space-y-6">
-            {/* AI Preview */}
-            <div className="bg-bv-bg-tertiary border border-bv-border-subtle rounded-xl p-6">
-              <h3 className="text-white font-bold text-lg mb-4 flex items-center gap-2">
-                <TrendingUp size={18} className="text-bv-blue" />
-                AI Mérkőzés Elemzés
-              </h3>
-              <div className="space-y-3 text-bv-text-secondary text-sm leading-relaxed">
-                <p>
-                  A {match.homeTeam} hazai pályán erős teljesítményt nyújt. Az odds-ok alapján
-                  a győzelmi esélye {probabilities.home}%. A csapat formaja és a hazai pálya
-                  előnye jelentős tényező.
-                </p>
-                <p>
-                  A {match.awayTeam} vendégben {(100 / match.awayOdds).toFixed(1)}%-os
-                  eséllyel indul. Az odds-ok alapján{' '}
-                  {match.awayOdds > match.homeOdds ? 'underdog' : 'esélyes'} szerepet tölt be.
-                </p>
-                <p>
-                  A döntetlen valószínűsége {probabilities.draw}%, ami
-                  {probabilities.draw > 25 ? ' magasabb' : ' alacsonyabb'} az átlagosnál.
-                </p>
+            {isAiLocked ? (
+              <div className="bg-bv-bg-tertiary border border-bv-border-subtle rounded-xl p-8 text-center">
+                <div className="text-white font-bold text-lg mb-2">AI elemzés elérhető</div>
+                <div className="text-bv-text-secondary text-sm mb-3">
+                  PRO csomag kell a teljes AI elemzéshez.
+                </div>
+                <PremiumUpgradeLink text="Frissítés most" />
               </div>
+            ) : (
+              <>
+                {/* AI Preview */}
+                <div className="bg-bv-bg-tertiary border border-bv-border-subtle rounded-xl p-6">
+                  <h3 className="text-white font-bold text-lg mb-4 flex items-center gap-2">
+                    <TrendingUp size={18} className="text-bv-blue" />
+                    AI Mérkőzés Elemzés
+                  </h3>
+                  <div className="space-y-3 text-bv-text-secondary text-sm leading-relaxed">
+                    <p>
+                      A {match.homeTeam} hazai pályán erős teljesítményt nyújt. Az odds-ok alapján
+                      a győzelmi esélye {probabilities.home}%. A csapat formaja és a hazai pálya
+                      előnye jelentős tényező.
+                    </p>
+                    <p>
+                      A {match.awayTeam} vendégben {(100 / match.awayOdds).toFixed(1)}%-os
+                      eséllyel indul. Az odds-ok alapján{' '}
+                      {match.awayOdds > match.homeOdds ? 'underdog' : 'esélyes'} szerepet tölt be.
+                    </p>
+                    <p>
+                      A döntetlen valószínűsége {probabilities.draw}%, ami
+                      {probabilities.draw > 25 ? ' magasabb' : ' alacsonyabb'} az átlagosnál.
+                    </p>
+                  </div>
 
-              {/* Key Factors */}
-              <div className="mt-5 space-y-2">
-                <h4 className="text-white text-sm font-semibold mb-2">Kulcsfaktorok</h4>
-                {[
-                  { icon: TrendingUp, label: 'Forma', text: `${match.homeTeam}: Hazai előny + piaci bizalom` },
-                  { icon: Shield, label: 'Odds-érték', text: `Hazai: ${match.homeOdds.toFixed(2)} | Döntetlen: ${match.drawOdds.toFixed(2)} | Vendég: ${match.awayOdds.toFixed(2)}` },
-                  { icon: Swords, label: 'AI Predikció', text: `${match.aiConfidence}% confidence - ${match.aiPick === '1' ? 'Hazai győzelem' : match.aiPick === '2' ? 'Vendég győzelem' : 'Döntetlen'} valószínű` },
-                ].map((factor) => (
-                  <div key={factor.label} className="flex items-start gap-3 bg-bv-bg rounded-lg p-3">
-                    <factor.icon size={16} className="text-bv-blue flex-shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-white text-sm font-medium">{factor.label}:</span>{' '}
-                      <span className="text-bv-text-secondary text-sm">{factor.text}</span>
+                  {/* Key Factors */}
+                  <div className="mt-5 space-y-2">
+                    <h4 className="text-white text-sm font-semibold mb-2">Kulcsfaktorok</h4>
+                    {[
+                      {
+                        icon: TrendingUp,
+                        label: 'Forma',
+                        text: `${match.homeTeam}: Hazai előny + piaci bizalom`,
+                      },
+                      {
+                        icon: Shield,
+                        label: 'Odds-érték',
+                        text: `Hazai: ${match.homeOdds.toFixed(2)} | Döntetlen: ${match.drawOdds.toFixed(2)} | Vendég: ${match.awayOdds.toFixed(2)}`,
+                      },
+                      {
+                        icon: Swords,
+                        label: 'AI Predikció',
+                        text: `${match.aiConfidence}% confidence - ${
+                          match.aiPick === '1'
+                            ? 'Hazai győzelem'
+                            : match.aiPick === '2'
+                              ? 'Vendég győzelem'
+                              : 'Döntetlen'
+                        } valószínű`,
+                      },
+                    ].map((factor) => (
+                      <div key={factor.label} className="flex items-start gap-3 bg-bv-bg rounded-lg p-3">
+                        <factor.icon size={16} className="text-bv-blue flex-shrink-0 mt-0.5" />
+                        <div>
+                          <span className="text-white text-sm font-medium">{factor.label}:</span>{' '}
+                          <span className="text-bv-text-secondary text-sm">{factor.text}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Probability Bars */}
+                <div className="bg-bv-bg-tertiary border border-bv-border-subtle rounded-xl p-6">
+                  <h3 className="text-white font-bold text-lg mb-4">Valószínűségi Eloszlás (AI)</h3>
+                  <div className="space-y-4">
+                    {[
+                      { label: `${match.homeTeam} győzelem`, value: probabilities.home, color: 'from-bv-green to-emerald-400' },
+                      { label: 'Döntetlen', value: probabilities.draw, color: 'from-yellow-500 to-amber-400' },
+                      { label: `${match.awayTeam} győzelem`, value: probabilities.away, color: 'from-bv-orange to-red-400' },
+                    ].map((bar) => (
+                      <div key={bar.label}>
+                        <div className="flex justify-between text-sm mb-1">
+                          <span className="text-bv-text-secondary">{bar.label}</span>
+                          <span className="text-white font-mono font-semibold">{bar.value}%</span>
+                        </div>
+                        <div className="h-3 bg-bv-bg rounded-full overflow-hidden">
+                          <div
+                            className={`h-full bg-gradient-to-r ${bar.color} rounded-full transition-all duration-1000`}
+                            style={{ width: `${bar.value}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* xG Comparison */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-bv-bg-tertiary border border-bv-border-subtle rounded-xl p-6 text-center">
+                    <h4 className="text-white text-sm font-semibold mb-4">xG — {match.homeTeam}</h4>
+                    <div className="relative w-28 h-28 mx-auto">
+                      <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+                        <circle cx="50" cy="50" r="42" fill="none" stroke="#1E293B" strokeWidth="8" />
+                        <circle
+                          cx="50"
+                          cy="50"
+                          r="42"
+                          fill="none"
+                          stroke="#00D4FF"
+                          strokeWidth="8"
+                          strokeDasharray={`${stats.xG.home * 66} ${264 - stats.xG.home * 66}`}
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="font-mono text-2xl font-bold text-bv-blue">{stats.xG.home.toFixed(1)}</span>
+                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Probability Bars */}
-            <div className="bg-bv-bg-tertiary border border-bv-border-subtle rounded-xl p-6">
-              <h3 className="text-white font-bold text-lg mb-4">Valószínűségi Eloszlás (AI)</h3>
-              <div className="space-y-4">
-                {[
-                  { label: `${match.homeTeam} győzelem`, value: probabilities.home, color: 'from-bv-green to-emerald-400' },
-                  { label: 'Döntetlen', value: probabilities.draw, color: 'from-yellow-500 to-amber-400' },
-                  { label: `${match.awayTeam} győzelem`, value: probabilities.away, color: 'from-bv-orange to-red-400' },
-                ].map((bar) => (
-                  <div key={bar.label}>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="text-bv-text-secondary">{bar.label}</span>
-                      <span className="text-white font-mono font-semibold">{bar.value}%</span>
+                  <div className="bg-bv-bg-tertiary border border-bv-border-subtle rounded-xl p-6 text-center">
+                    <h4 className="text-white text-sm font-semibold mb-4">xG — {match.awayTeam}</h4>
+                    <div className="relative w-28 h-28 mx-auto">
+                      <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+                        <circle cx="50" cy="50" r="42" fill="none" stroke="#1E293B" strokeWidth="8" />
+                        <circle
+                          cx="50"
+                          cy="50"
+                          r="42"
+                          fill="none"
+                          stroke="#F59E0B"
+                          strokeWidth="8"
+                          strokeDasharray={`${stats.xG.away * 66} ${264 - stats.xG.away * 66}`}
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="font-mono text-2xl font-bold text-bv-orange">{stats.xG.away.toFixed(1)}</span>
+                      </div>
                     </div>
-                    <div className="h-3 bg-bv-bg rounded-full overflow-hidden">
-                      <div
-                        className={`h-full bg-gradient-to-r ${bar.color} rounded-full transition-all duration-1000`}
-                        style={{ width: `${bar.value}%` }}
+                  </div>
+                </div>
+
+                {/* Radar Chart */}
+                <div className="bg-bv-bg-tertiary border border-bv-border-subtle rounded-xl p-6">
+                  <h3 className="text-white font-bold text-lg mb-4">Csapat Erősség Radar</h3>
+                  <div className="flex justify-center">
+                    <svg viewBox="0 0 300 260" className="w-full max-w-sm">
+                      {/* Pentagon grid */}
+                      {[0.2, 0.4, 0.6, 0.8, 1].map((scale) => (
+                        <polygon
+                          key={scale}
+                          points={getPentagonPoints(100 * scale, 150, 120)}
+                          fill="none"
+                          stroke="rgba(255,255,255,0.08)"
+                          strokeWidth="1"
+                        />
+                      ))}
+                      {/* Axis labels */}
+                      {['Támadás', 'Védelem', 'Forma', 'Otthon/Idegen', 'Motiváció'].map((label, i) => {
+                        const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
+                        const x = 150 + 135 * Math.cos(angle);
+                        const y = 120 + 135 * Math.sin(angle);
+                        return (
+                          <text
+                            key={label}
+                            x={x}
+                            y={y}
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                            fill="#888"
+                            fontSize="10"
+                          >
+                            {label}
+                          </text>
+                        );
+                      })}
+                      {/* Home team */}
+                      <polygon
+                        points={getPentagonPointsForValues(homeRadarValues, 150, 120)}
+                        fill="rgba(0,255,148,0.15)"
+                        stroke="#00D4FF"
+                        strokeWidth="2"
                       />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* xG Comparison */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-bv-bg-tertiary border border-bv-border-subtle rounded-xl p-6 text-center">
-                <h4 className="text-white text-sm font-semibold mb-4">xG — {match.homeTeam}</h4>
-                <div className="relative w-28 h-28 mx-auto">
-                  <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-                    <circle cx="50" cy="50" r="42" fill="none" stroke="#1E293B" strokeWidth="8" />
-                    <circle
-                      cx="50" cy="50" r="42" fill="none" stroke="#00D4FF" strokeWidth="8"
-                      strokeDasharray={`${stats.xG.home * 66} ${264 - stats.xG.home * 66}`}
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="font-mono text-2xl font-bold text-bv-blue">{stats.xG.home.toFixed(1)}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-bv-bg-tertiary border border-bv-border-subtle rounded-xl p-6 text-center">
-                <h4 className="text-white text-sm font-semibold mb-4">xG — {match.awayTeam}</h4>
-                <div className="relative w-28 h-28 mx-auto">
-                  <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-                    <circle cx="50" cy="50" r="42" fill="none" stroke="#1E293B" strokeWidth="8" />
-                    <circle
-                      cx="50" cy="50" r="42" fill="none" stroke="#F59E0B" strokeWidth="8"
-                      strokeDasharray={`${stats.xG.away * 66} ${264 - stats.xG.away * 66}`}
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="font-mono text-2xl font-bold text-bv-orange">{stats.xG.away.toFixed(1)}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Radar Chart */}
-            <div className="bg-bv-bg-tertiary border border-bv-border-subtle rounded-xl p-6">
-              <h3 className="text-white font-bold text-lg mb-4">Csapat Erősség Radar</h3>
-              <div className="flex justify-center">
-                <svg viewBox="0 0 300 260" className="w-full max-w-sm">
-                  {/* Pentagon grid */}
-                  {[0.2, 0.4, 0.6, 0.8, 1].map((scale) => (
-                    <polygon
-                      key={scale}
-                      points={getPentagonPoints(100 * scale, 150, 120)}
-                      fill="none"
-                      stroke="rgba(255,255,255,0.08)"
-                      strokeWidth="1"
-                    />
-                  ))}
-                  {/* Axis labels */}
-                  {['Támadás', 'Védelem', 'Forma', 'Otthon/Idegen', 'Motiváció'].map((label, i) => {
-                    const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
-                    const x = 150 + 135 * Math.cos(angle);
-                    const y = 120 + 135 * Math.sin(angle);
-                    return (
-                      <text
-                        key={label}
-                        x={x}
-                        y={y}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fill="#888"
-                        fontSize="10"
-                      >
-                        {label}
+                      {/* Away team */}
+                      <polygon
+                        points={getPentagonPointsForValues(awayRadarValues, 150, 120)}
+                        fill="rgba(255,51,102,0.1)"
+                        stroke="#F59E0B"
+                        strokeWidth="2"
+                      />
+                      {/* Legend */}
+                      <rect x="80" y="240" width="8" height="8" fill="#00D4FF" rx="2" />
+                      <text x="94" y="248" fill="#fff" fontSize="10">
+                        {match.homeTeam}
                       </text>
-                    );
-                  })}
-                  {/* Home team */}
-                  <polygon
-                    points={getPentagonPointsForValues(homeRadarValues, 150, 120)}
-                    fill="rgba(0,255,148,0.15)"
-                    stroke="#00D4FF"
-                    strokeWidth="2"
-                  />
-                  {/* Away team */}
-                  <polygon
-                    points={getPentagonPointsForValues(awayRadarValues, 150, 120)}
-                    fill="rgba(255,51,102,0.1)"
-                    stroke="#F59E0B"
-                    strokeWidth="2"
-                  />
-                  {/* Legend */}
-                  <rect x="80" y="240" width="8" height="8" fill="#00D4FF" rx="2" />
-                  <text x="94" y="248" fill="#fff" fontSize="10">{match.homeTeam}</text>
-                  <rect x="170" y="240" width="8" height="8" fill="#F59E0B" rx="2" />
-                  <text x="184" y="248" fill="#fff" fontSize="10">{match.awayTeam}</text>
-                </svg>
-              </div>
-            </div>
+                      <rect x="170" y="240" width="8" height="8" fill="#F59E0B" rx="2" />
+                      <text x="184" y="248" fill="#fff" fontSize="10">
+                        {match.awayTeam}
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
 
@@ -443,8 +515,18 @@ export default function AnalyticsPage() {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {[
                   { key: 'shots', label: 'Lövések', home: stats.shots.home, away: stats.shots.away },
-                  { key: 'shotsOnGoal', label: 'Kapura lövések', home: stats.shotsOnGoal.home, away: stats.shotsOnGoal.away },
-                  { key: 'possession', label: 'Labdabirtoklás (%)', home: stats.possession.home, away: stats.possession.away },
+                  {
+                    key: 'shotsOnGoal',
+                    label: 'Kapura lövések',
+                    home: stats.shotsOnGoal.home,
+                    away: stats.shotsOnGoal.away,
+                  },
+                  {
+                    key: 'possession',
+                    label: 'Labdabirtoklás (%)',
+                    home: stats.possession.home,
+                    away: stats.possession.away,
+                  },
                   { key: 'xG', label: 'xG (Várható gól)', home: stats.xG.home, away: stats.xG.away, decimals: true },
                   { key: 'corners', label: 'Szögletek', home: stats.corners.home, away: stats.corners.away },
                   { key: 'fouls', label: 'Szabálytalanságok', home: stats.fouls.home, away: stats.fouls.away },
@@ -462,18 +544,19 @@ export default function AnalyticsPage() {
                         {stat.decimals ? (stat.away as number).toFixed(1) : stat.away}
                       </span>
                     </div>
+
                     {/* Progress bar */}
                     <div className="mt-2 h-1.5 bg-bv-bg-secondary rounded-full overflow-hidden flex">
                       <div
                         className="h-full bg-bv-blue rounded-full"
                         style={{
-                          width: `${(stat.home as number / ((stat.home as number) + (stat.away as number))) * 100}%`,
+                          width: `${((stat.home as number) / ((stat.home as number) + (stat.away as number))) * 100}%`,
                         }}
                       />
                       <div
                         className="h-full bg-bv-orange rounded-full"
                         style={{
-                          width: `${(stat.away as number / ((stat.home as number) + (stat.away as number))) * 100}%`,
+                          width: `${((stat.away as number) / ((stat.home as number) + (stat.away as number))) * 100}%`,
                         }}
                       />
                     </div>
@@ -495,9 +578,7 @@ export default function AnalyticsPage() {
                     <span className={`text-sm font-medium ${game.winner === 'home' && game.home === match.homeTeam ? 'text-bv-blue' : 'text-white'}`}>
                       {game.home}
                     </span>
-                    <span className="font-mono text-white font-bold px-3 py-1 bg-bv-bg-secondary rounded">
-                      {game.score}
-                    </span>
+                    <span className="font-mono text-white font-bold px-3 py-1 bg-bv-bg-secondary rounded">{game.score}</span>
                     <span className={`text-sm font-medium ${game.winner === 'away' && game.away === match.awayTeam ? 'text-bv-orange' : 'text-white'}`}>
                       {game.away}
                     </span>
