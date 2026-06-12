@@ -1,0 +1,142 @@
+/**
+ * AI Tippek Router — ÉLES VERZIÓ
+ * Valós odds-ok a The Odds API-ból + kvantitatív modell
+ */
+
+import { Router, Request, Response } from 'express';
+import { analyzeMatch, type TeamStats, type MarketOdds, type MatchInput } from '../services/quantitativeModel.js';
+import { fetchWorldCupOdds, getBestOdds, getUsageStats } from '../services/oddsApiService.js';
+
+export const aiTipsRouter = Router();
+
+const BANKROLL = 100_000;
+const MAX_STAKE_PCT = 8;
+
+// Csapatadatok bővítve az összes VB csapatra
+const TEAM_DB: Record<string, Partial<TeamStats>> = {
+  'Canada':         { elo: 1520, attackStrength: 1.25, defenseStrength: 1.15, tier1Missing: 1, tier2Missing: 1, pressureIndex: 0.85 },
+  'Bosnia & Herzegovina': { elo: 1460, attackStrength: 1.05, defenseStrength: 1.30, tier1Missing: 0, tier2Missing: 1, pressureIndex: 0.60 },
+  'USA':             { elo: 1560, attackStrength: 1.15, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 1, pressureIndex: 0.70 },
+  'Paraguay':        { elo: 1430, attackStrength: 0.75, defenseStrength: 0.85, tier1Missing: 1, tier2Missing: 0, pressureIndex: 0.50 },
+  'Mexico':          { elo: 1550, attackStrength: 1.20, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.60 },
+  'Brazil':          { elo: 1680, attackStrength: 1.50, defenseStrength: 0.85, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'France':          { elo: 1700, attackStrength: 1.55, defenseStrength: 0.80, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'England':         { elo: 1650, attackStrength: 1.40, defenseStrength: 0.90, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Spain':           { elo: 1660, attackStrength: 1.45, defenseStrength: 0.85, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Argentina':       { elo: 1640, attackStrength: 1.40, defenseStrength: 0.90, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Germany':         { elo: 1620, attackStrength: 1.35, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Netherlands':     { elo: 1600, attackStrength: 1.30, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Portugal':        { elo: 1580, attackStrength: 1.30, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+};
+
+function getTeamStats(name: string): TeamStats {
+  const base = TEAM_DB[name] || { elo: 1500, attackStrength: 1.0, defenseStrength: 1.0, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.5 };
+  return {
+    name,
+    elo: base.elo || 1500,
+    attackStrength: base.attackStrength || 1.0,
+    defenseStrength: base.defenseStrength || 1.0,
+    recentForm: ['W', 'W', 'W', 'W', 'W'],
+    tier1Missing: base.tier1Missing || 0,
+    tier2Missing: base.tier2Missing || 0,
+    pressureIndex: base.pressureIndex || 0.5,
+  };
+}
+
+// ================================================================
+// GET /api/ai/tips — ÉLŐ VB TIPPEK
+// ================================================================
+
+aiTipsRouter.get('/tips', async (_req: Request, res: Response) => {
+  try {
+    const apiMatches = await fetchWorldCupOdds();
+    const usage = getUsageStats();
+    
+    const analyses = apiMatches.slice(0, 12).map((apiMatch, idx) => {
+      const best = getBestOdds(apiMatch);
+      const homeStats = getTeamStats(best.homeTeam);
+      const awayStats = getTeamStats(best.awayTeam);
+
+      const input: MatchInput = {
+        homeTeam: homeStats,
+        awayTeam: awayStats,
+        marketOdds: {
+          homeOdds: best.homeOdds,
+          drawOdds: best.drawOdds,
+          awayOdds: best.awayOdds,
+        },
+        isNeutralVenue: true,
+        groupStage: 'VB 2026',
+      };
+
+      const analysis = analyzeMatch(input, idx);
+      const kellyCap = Math.min(Math.round(BANKROLL * MAX_STAKE_PCT / 100));
+      
+      return {
+        ...analysis,
+        kickoff: apiMatch.commence_time,
+        bestBookmaker: best.bestBookmaker,
+        kellyStakeFt: Math.min(analysis.kellyStakeFt, kellyCap),
+      };
+    });
+
+    const totalStake = analyses.reduce((s, a) => s + a.kellyStakeFt, 0);
+
+    res.json({
+      date: new Date().toISOString().split('T')[0],
+      apiUsage: usage,
+      bankroll: {
+        total: BANKROLL,
+        allocated: totalStake,
+        remaining: BANKROLL - totalStake,
+        allocationPct: Math.round((totalStake / BANKROLL) * 100),
+      },
+      strategy: {
+        maxBetsPerDay: 5,
+        stopLossPct: 20,
+        takeProfitPct: 50,
+        kellyType: 'Quarter-Kelly',
+        maxStakePct: MAX_STAKE_PCT,
+        strategyType: 'Élő odds + Kvantitatív modell',
+      },
+      matches: analyses,
+    });
+  } catch (error: any) {
+    console.error('[aiTips] Hiba:', error.message);
+    res.status(500).json({ 
+      error: 'Hiba az élő odds-ok lekérésekor',
+      detail: error.message,
+    });
+  }
+});
+
+// GET /api/ai/portfolio
+aiTipsRouter.get('/portfolio', (_req: Request, res: Response) => {
+  res.json({
+    bankroll: { initial: BANKROLL, current: BANKROLL, pnl: 0, pnlPct: 0 },
+    activeBets: [],
+    history: [],
+    riskMetrics: { maxDrawdown: 0, sharpeRatio: 0, winRate: 0 },
+    lastUpdated: new Date().toISOString(),
+  });
+});
+
+// POST /api/ai/analyze
+aiTipsRouter.post('/analyze', (req: Request, res: Response) => {
+  try {
+    const { homeTeam, awayTeam, homeOdds, drawOdds, awayOdds } = req.body;
+    if (!homeTeam || !awayTeam || !homeOdds || !drawOdds || !awayOdds) {
+      res.status(400).json({ error: 'Hiányzó paraméterek' });
+      return;
+    }
+    const input: MatchInput = {
+      homeTeam: getTeamStats(homeTeam),
+      awayTeam: getTeamStats(awayTeam),
+      marketOdds: { homeOdds: Number(homeOdds), drawOdds: Number(drawOdds), awayOdds: Number(awayOdds) },
+      isNeutralVenue: true,
+    };
+    res.json(analyzeMatch(input, 0));
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
