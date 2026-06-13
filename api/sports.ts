@@ -12,7 +12,15 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const API_BASE_URL = 'https://v3.football.api-sports.io';
-const FALLBACK_KEY = 'c2e659119f7d1c12b7bb8768fa0a9a2f';
+
+/**
+ * Az API kulcsot a Vercel környezeti változóból olvassa.
+ * Beállítás a Vercel Dashboardon: VERCEL_API_FOOTBALL_KEY
+ * 
+ * NINCS FALLBACK — ha a környezeti változó hiányzik, a függvény
+ * 500-as hibát ad vissza. Ennek az oka: a korábbi FALLBACK_KEY
+ * commitolva volt a publikus repóba, így bárki használhatta volna.
+ */
 
 export default async function handler(
   request: VercelRequest,
@@ -67,7 +75,12 @@ export default async function handler(
   }
 
   try {
-    const apiKey = process.env.VERCEL_API_FOOTBALL_KEY || FALLBACK_KEY;
+    const apiKey = process.env.VERCEL_API_FOOTBALL_KEY;
+    if (!apiKey) {
+      console.error('[API Proxy] HIÁNYZIK a VERCEL_API_FOOTBALL_KEY környezeti változó');
+      response.status(500).json({ error: 'API kulcs hiányzik. Állítsd be a VERCEL_API_FOOTBALL_KEY env változót.' });
+      return;
+    }
     const queryString = new URLSearchParams(cleanParams).toString();
     const url = `${API_BASE_URL}/${endpoint}${queryString ? `?${queryString}` : ''}`;
 

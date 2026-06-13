@@ -3,8 +3,19 @@
  * VB 2026: élő odds, scores, odds előzmények, modell visszacsatolás
  */
 
-const API_KEY='a8e5531b0522a4fdf01a696cbab69cff';
+const API_KEY = process.env.ODDS_API_KEY ?? '';
 const BASE_URL = 'https://api.the-odds-api.com/v4';
+
+/** Betöltéskor ellenőrizzük, hogy a kulcs rendelkezésre áll-e */
+if (!API_KEY) {
+  console.warn(
+    '[oddsApiService] HIÁNYZIK az ODDS_API_KEY környezeti változó!\n' +
+    '  1. Szerezz be egy API kulcsot: https://the-odds-api.com\n' +
+    '  2. Állítsd be a server/.env-ben: ODDS_API_KEY=your_key_here\n' +
+    '  3. Vagy állítsd be a környezetben export ODDS_API_KEY=...\n' +
+    '  4. A szolgáltatás e nélkül nem fog éles adatokat visszaadni.'
+  );
+}
 
 interface OddsApiMatch {
   id: string;
