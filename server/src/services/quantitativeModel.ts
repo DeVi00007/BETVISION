@@ -166,19 +166,71 @@ export function calculateExpectedGoals(
 }
 
 // ================================================================
-// 4. VALÓSZÍNŰSÉG SZÁMÍTÁS POISSONNAL
+// 4. VALÓSZÍNŰSÉG SZÁMÍTÁS POISSONNAL + DIXON-COLES KORREKCIÓ
 // ================================================================
 
 /**
- * Teljes valószínűségi mátrix létrehozása Poisson alapján
- * Kiszámolja 1X2, Over/Under, és pontos gólarányok valószínűségét
+ * Dixon-Coles τ (tau) korrekciós tényező az alacsony eredményekre.
+ *
+ * A független Poisson alulbecsli a 0-0 és 1-1 döntetleneket, és túlbecsli
+ * a 1-0 / 0-1 eredményeket. A Dixon-Coles (1997) τ függvény ezt korrigálja.
+ *
+ * ρ (rho) az alacsony-eredmény korrelációs paraméter. Tipikus empirikus
+ * érték a futballban: ρ ≈ -0.13 ... -0.18 (mi -0.15-öt használunk default-ként,
+ * ezt KALIBRÁLNI kell historikus adatra a calibration modullal).
+ */
+export const DIXON_COLES_RHO = -0.15;
+
+function dixonColesTau(
+  homeGoals: number,
+  awayGoals: number,
+  lambdaHome: number,
+  lambdaAway: number,
+  rho: number = DIXON_COLES_RHO
+): number {
+  if (homeGoals === 0 && awayGoals === 0) {
+    return 1 - lambdaHome * lambdaAway * rho;
+  }
+  if (homeGoals === 0 && awayGoals === 1) {
+    return 1 + lambdaHome * rho;
+  }
+  if (homeGoals === 1 && awayGoals === 0) {
+    return 1 + lambdaAway * rho;
+  }
+  if (homeGoals === 1 && awayGoals === 1) {
+    return 1 - rho;
+  }
+  return 1.0;
+}
+
+/**
+ * Teljes, NORMALIZÁLT valószínűségi mátrix Poisson + Dixon-Coles alapján.
+ *
+ * Minden kimenetet (1X2 ÉS Over/Under) UGYANABBÓL a normalizált mátrixból
+ * származtatunk, így a valószínűségi tér konzisztens (Σ = 1).
+ * Korábbi hiba: az 1X2 normalizálva volt, az O/U nem → inkonzisztens tér.
  */
 export function calculateProbabilities(
   homeExpectedGoals: number,
   awayExpectedGoals: number,
-  maxGoals: number = 8
+  maxGoals: number = 10,
+  rho: number = DIXON_COLES_RHO
 ): ProbabilityResult {
-  // Valószínűségi mátrix
+  // 1. Teljes közös eloszlás mátrix felépítése Dixon-Coles korrekcióval
+  const matrix: number[][] = [];
+  let matrixSum = 0;
+
+  for (let h = 0; h <= maxGoals; h++) {
+    matrix[h] = [];
+    for (let a = 0; a <= maxGoals; a++) {
+      const tau = dixonColesTau(h, a, homeExpectedGoals, awayExpectedGoals, rho);
+      const prob = poissonPMF(homeExpectedGoals, h) * poissonPMF(awayExpectedGoals, a) * tau;
+      matrix[h][a] = prob;
+      matrixSum += prob;
+    }
+  }
+
+  // 2. Egyetlen normalizálás a teljes mátrixra (a τ és a levágás miatt Σ ≠ 1)
   let homeWin = 0;
   let draw = 0;
   let awayWin = 0;
@@ -187,24 +239,23 @@ export function calculateProbabilities(
 
   for (let h = 0; h <= maxGoals; h++) {
     for (let a = 0; a <= maxGoals; a++) {
-      const prob = poissonPMF(homeExpectedGoals, h) * poissonPMF(awayExpectedGoals, a);
+      const prob = matrix[h][a] / matrixSum; // normalizált
       if (h > a) homeWin += prob;
       else if (h === a) draw += prob;
       else awayWin += prob;
 
-      if (h + a > 2.5) over25 += prob;
+      // 2.5 gólvonal: 0,1,2 gól = Under; 3+ = Over
+      if (h + a >= 3) over25 += prob;
       else under25 += prob;
     }
   }
 
-  // Normalizálás (lebegőpontos hibák miatt)
-  const sum = homeWin + draw + awayWin;
   return {
-    homeWin: homeWin / sum,
-    draw: draw / sum,
-    awayWin: awayWin / sum,
-    over25: over25,
-    under25: under25,
+    homeWin,
+    draw,
+    awayWin,
+    over25,
+    under25,
     homeExpectedGoals,
     awayExpectedGoals,
   };
