@@ -20,12 +20,13 @@ check('1X2 összege = 1', Math.abs(sum1x2 - 1) < 1e-9, `(Σ=${sum1x2.toFixed(8)}
 check('Over+Under = 1 (KORÁBBAN ELTÖRT!)', Math.abs(sumOU - 1) < 1e-9, `(Σ=${sumOU.toFixed(8)})`);
 check('O/U ugyanabból a térből mint 1X2', Math.abs(sum1x2 - sumOU) < 1e-9, `(diff=${Math.abs(sum1x2-sumOU).toExponential(2)})`);
 
-console.log('\n=== 2. DIXON-COLES HATÁS A DÖNTETLENRE ===');
-// ρ=0 → tiszta Poisson; ρ=-0.15 → több döntetlen alacsony gólszámnál
+console.log('\n=== 2. DIXON-COLES MECHANIZMUS (explicit ρ=-0.15) ===');
+// A DC default most ρ=0 (backteszt szerint), de a MECHANIZMUS helyességét
+// explicit ρ=-0.15-tel teszteljük: negatív ρ-nak emelnie kell a döntetlent.
 const pPoisson = calculateProbabilities(1.2, 1.0, 10, 0);
-const pDC = calculateProbabilities(1.2, 1.0, 10, DIXON_COLES_RHO);
-check('DC növeli a döntetlen valószínűségét', pDC.draw > pPoisson.draw,
-  `(Poisson X=${(pPoisson.draw*100).toFixed(2)}% → DC X=${(pDC.draw*100).toFixed(2)}%)`);
+const pDC = calculateProbabilities(1.2, 1.0, 10, -0.15);
+check('DC (ρ=-0.15) növeli a döntetlen valószínűségét', pDC.draw > pPoisson.draw,
+  `(ρ=0 X=${(pPoisson.draw*100).toFixed(2)}% → ρ=-0.15 X=${(pDC.draw*100).toFixed(2)}%)`);
 check('DC verzió is normalizált', Math.abs(pDC.homeWin+pDC.draw+pDC.awayWin - 1) < 1e-9);
 
 console.log('\n=== 3. EXPECTED GOALS ÉPELMÉJŰSÉG ===');

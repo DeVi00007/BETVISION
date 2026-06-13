@@ -175,11 +175,19 @@ export function calculateExpectedGoals(
  * A független Poisson alulbecsli a 0-0 és 1-1 döntetleneket, és túlbecsli
  * a 1-0 / 0-1 eredményeket. A Dixon-Coles (1997) τ függvény ezt korrigálja.
  *
- * ρ (rho) az alacsony-eredmény korrelációs paraméter. Tipikus empirikus
- * érték a futballban: ρ ≈ -0.13 ... -0.18 (mi -0.15-öt használunk default-ként,
- * ezt KALIBRÁLNI kell historikus adatra a calibration modullal).
+ * ρ (rho) az alacsony-eredmény korrelációs paraméter.
+ *
+ * KALIBRÁLVA (backtest/calibrate.ts, VB 2014+2018 train → VB 2022 test,
+ * valós martj42 adat): a grid search ρ=0-t választott — ezen az
+ * Elo-only feature-készleten a Dixon-Coles korrekció NEM javított a
+ * log-loss-on (train: ρ=0 → 0.9277 vs ρ=-0.15 → 0.9365).
+ *
+ * FONTOS: ez NEM jelenti, hogy a Dixon-Coles elve hibás — gazdagabb
+ * λ-modellnél (xG, forma) jellemzően ρ≈-0.13..-0.15 a hasznos. De a
+ * jelenlegi adaton az ŐSZINTE optimum ρ=0, ezért ezt használjuk
+ * default-ként. A τ-mechanizmus a kódban marad, ha a feature-készlet bővül.
  */
-export const DIXON_COLES_RHO = -0.15;
+export const DIXON_COLES_RHO = 0;
 
 function dixonColesTau(
   homeGoals: number,
@@ -291,6 +299,34 @@ export function cleanMarketOdds(odds: MarketOdds): {
 // ================================================================
 // 6. ÉRTÉK ÉS KELLY-KRITÉRIUM
 // ================================================================
+
+/**
+ * PROBABILITY SHRINKAGE — a backtest legfontosabb védelmi tanulsága.
+ *
+ * A VB 2022 out-of-sample backtest kimutatta, hogy a modell a magas-
+ * confidence sávokban TÚLBECSÜL (60-70%: modell 65.8% → valóság 47.1%;
+ * 80-90%: 83.6% → 60.0%). Ez Kelly-méretezésnél felülméretezést okoz,
+ * ami csődkockázatot növel.
+ *
+ * A védelem: a modell-valószínűséget a piaci (tisztított) valószínűség
+ * felé húzzuk egy λ shrinkage-faktorral, MIELŐTT value-t és Kelly-t
+ * számolnánk. Ez konzervatívabb téteket ad, és a piacot (ami a backtest
+ * szerint pontosabb) súlyozza be.
+ *
+ * shrunk = λ · market + (1-λ) · model
+ * λ=0 → tiszta modell (régi, túl-magabiztos viselkedés)
+ * λ=0.5 → fele-fele (alapértelmezett, konzervatív)
+ * λ=1 → tiszta piac (nincs edge-állítás)
+ */
+export const PROBABILITY_SHRINKAGE = 0.5;
+
+export function shrinkToMarket(
+  modelProb: number,
+  marketProb: number,
+  lambda: number = PROBABILITY_SHRINKAGE
+): number {
+  return lambda * marketProb + (1 - lambda) * modelProb;
+}
 
 /**
  * Value kalkuláció: Value = (P × Odds) - 1
@@ -440,25 +476,34 @@ export function analyzeMatch(
   // --- 3. PIACI ODDS TISZTÍTÁS ---
   const cleanedMarket = cleanMarketOdds(marketOdds);
 
-  // --- 4. VALUE ÉS KELLY ---
+  // --- 3b. SHRINKAGE A PIAC FELÉ (backtest-vezérelt túlbecslés-korrekció) ---
+  // A VB 2022 backtest szerint a modell a magas-confidence sávban túlbecsül.
+  // A value/Kelly számítást a piac felé húzott valószínűségből végezzük,
+  // így a felülméretezés tompul. A megjelenített correctedProbs változatlan
+  // marad (átláthatóság), de a TÉTmeghatározás a shrunk értékkel történik.
+  const shrunkHome = shrinkToMarket(correctedProbs.homeWin, cleanedMarket.homeProb);
+  const shrunkDraw = shrinkToMarket(correctedProbs.draw, cleanedMarket.drawProb);
+  const shrunkAway = shrinkToMarket(correctedProbs.awayWin, cleanedMarket.awayProb);
+
+  // --- 4. VALUE ÉS KELLY (shrunk valószínűségből) ---
   const valueBets: ValueBet[] = [];
 
   // 1X2 piac
-  const homeValue = calculateValue(correctedProbs.homeWin, marketOdds.homeOdds);
-  const drawValue = calculateValue(correctedProbs.draw, marketOdds.drawOdds);
-  const awayValue = calculateValue(correctedProbs.awayWin, marketOdds.awayOdds);
+  const homeValue = calculateValue(shrunkHome, marketOdds.homeOdds);
+  const drawValue = calculateValue(shrunkDraw, marketOdds.drawOdds);
+  const awayValue = calculateValue(shrunkAway, marketOdds.awayOdds);
 
   const marketEfficiency = marketEfficiencyIndex('1X2', cleanedMarket.overround);
 
   // Csak +EV esetén ajánljuk, és piaci hatékonyság filter
   if (homeValue > 0.05 && homeValue * marketEfficiency > 0.03) {
-    const kelly = calculateKelly(correctedProbs.homeWin, marketOdds.homeOdds);
+    const kelly = calculateKelly(shrunkHome, marketOdds.homeOdds);
     const confidence = Math.min(95, Math.round(50 + homeValue * 200));
     valueBets.push({
       type: '1X2',
       selection: `${homeTeam.name} (Hazai győzelem)`,
       marketOdds: marketOdds.homeOdds,
-      modelProbability: correctedProbs.homeWin,
+      modelProbability: shrunkHome,
       marketProbability: cleanedMarket.homeProb,
       value: homeValue,
       kellyFraction: kelly.fullKelly,
@@ -469,13 +514,13 @@ export function analyzeMatch(
   }
 
   if (drawValue > 0.05 && drawValue * marketEfficiency > 0.03) {
-    const kelly = calculateKelly(correctedProbs.draw, marketOdds.drawOdds);
+    const kelly = calculateKelly(shrunkDraw, marketOdds.drawOdds);
     const confidence = Math.min(90, Math.round(50 + drawValue * 150));
     valueBets.push({
       type: '1X2',
       selection: 'Döntetlen (X)',
       marketOdds: marketOdds.drawOdds,
-      modelProbability: correctedProbs.draw,
+      modelProbability: shrunkDraw,
       marketProbability: cleanedMarket.drawProb,
       value: drawValue,
       kellyFraction: kelly.fullKelly,
@@ -486,13 +531,13 @@ export function analyzeMatch(
   }
 
   if (awayValue > 0.05 && awayValue * marketEfficiency > 0.03) {
-    const kelly = calculateKelly(correctedProbs.awayWin, marketOdds.awayOdds);
+    const kelly = calculateKelly(shrunkAway, marketOdds.awayOdds);
     const confidence = Math.min(95, Math.round(50 + awayValue * 200));
     valueBets.push({
       type: '1X2',
       selection: `${awayTeam.name} (Vendég győzelem)`,
       marketOdds: marketOdds.awayOdds,
-      modelProbability: correctedProbs.awayWin,
+      modelProbability: shrunkAway,
       marketProbability: cleanedMarket.awayProb,
       value: awayValue,
       kellyFraction: kelly.fullKelly,

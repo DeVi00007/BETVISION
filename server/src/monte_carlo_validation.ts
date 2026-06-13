@@ -1,9 +1,30 @@
 /**
- * Monte Carlo Szimuláció — BETVISION Kvantitatív Stratégia Validálása
- * 
+ * ⚠️  DEPRECATED — KÖRKÖRÖS VALIDÁCIÓ, NE HASZNÁLD BIZONYÍTÉKKÉNT! ⚠️
+ *
+ * Monte Carlo Szimuláció — BETVISION Kvantitatív Stratégia "Validálása"
+ *
+ * MIÉRT HIBÁS EZ A SCRIPT:
+ * A nyerést a SAJÁT modell valószínűségéből mintázza (`Math.random() < bet.prob`),
+ * majd ugyanazzal a `prob`-bal méretezi a tétet. Ezzel DEFINÍCIÓ SZERINT
+ * pozitív EV-t kap — körkörös érvelés. Nem bizonyít edge-et, csak azt mutatja,
+ * milyen lenne a variancia HA a modell valószínűségei pontosak lennének.
+ *
+ * A "✅ MATEMATIKAILAG VALID — NEM SZERENCSEJÁTÉK" konklúzió MEGTÉVESZTŐ volt.
+ *
+ * ➡️  HASZNÁLD HELYETTE: src/backtest/calibrate.ts
+ *     Az VALÓS, lezárt VB-meccseken (martj42 dataset) méri a modellt,
+ *     out-of-sample, log-loss / Brier / ECE / reliability mértékekkel.
+ *     A VB 2022 backtest kimutatta: az Elo-only modell NEM ver érdemben
+ *     naiv alaprátát, és a magas-confidence sávban túlbecsül.
+ *
+ * Ez a fájl CSAK variancia-illusztrációként marad meg (adott, FELTÉTELEZETT
+ * valószínűségek melletti bankroll-eloszlás), nem validációként.
+ *
  * 10.000 szimuláció a VB nap 1 portfóliójára.
- * Cél: bizonyítani, hogy a stratégia +EV (nem szerencse), és számszerűsíteni a kockázatokat.
  */
+
+console.warn('⚠️  monte_carlo_validation.ts: KÖRKÖRÖS szimuláció — NEM edge-bizonyíték.');
+console.warn('   Valódi validáció: npx tsx src/backtest/calibrate.ts\n');
 
 // === Portfólió definíció (Quarter-Kelly + 8% max cap) ===
 const BANKROLL = 100_000;
