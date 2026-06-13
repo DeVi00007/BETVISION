@@ -8,7 +8,6 @@ import AIConfidenceBadge from '@/components/AIConfidenceBadge';
 import RiskProfileSelector from '@/components/RiskProfileSelector';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import PremiumUpgradeLink from '@/components/PremiumUpgradeLink';
-import { quantitativeVBData } from '@/data/quantitativeTips';
 
 type ViewMode = 'ai-tippmix' | 'vb-kvantitativ';
 
@@ -42,15 +41,18 @@ export default function AITipsPage() {
     isUsingMockData,
   } = useAITips({ limit: 8 });
 
-  // VB Kvantitatív hook
+  // VB Kvantitatív hook (most a backend motort hívja)
   const {
     tips: vbTips,
     portfolio: vbPortfolio,
     lastUpdated: vbUpdated,
+    loading: vbLoading,
+    source: vbSource,
+    modelVersion: vbModelVersion,
   } = useQuantitativeTips();
 
   const tips = viewMode === 'vb-kvantitativ' ? vbTips : aiTips;
-  const loading = viewMode === 'vb-kvantitativ' ? false : aiLoading;
+  const loading = viewMode === 'vb-kvantitativ' ? vbLoading : aiLoading;
   const lastUpdated = viewMode === 'vb-kvantitativ' ? vbUpdated : aiUpdated;
 
   // Szűrés sport szerint
@@ -127,7 +129,13 @@ export default function AITipsPage() {
               <span className="text-bv-text-muted">|</span>
               <span className="text-bv-text-secondary">Szabad: <span className="text-bv-blue font-mono">{vbPortfolio.remainingBankroll.toLocaleString('hu-HU')} Ft</span></span>
               <span className="text-bv-text-muted">|</span>
-              <span className="text-bv-text-muted">{quantitativeVBData.modelVersion}</span>
+              <span className="text-bv-text-muted">{vbModelVersion}</span>
+              <span className="text-bv-text-muted">|</span>
+              {vbSource === 'engine' ? (
+                <span className="text-emerald-400 font-medium" title="Élő modell-kimenet a backend motorból">● Élő motor</span>
+              ) : (
+                <span className="text-amber-400 font-medium" title="A backend motor nem elérhető — statikus pillanatkép">○ Statikus pillanatkép</span>
+              )}
             </div>
           </div>
         )}
