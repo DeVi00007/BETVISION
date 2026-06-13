@@ -1,0 +1,60 @@
+import { TeamStats } from '../services/quantitativeModel.js';
+
+// Csapatadatok — MINDEN VB 2026 csapat (FIFA ranglista alapú Elo)
+// Forrás: FIFA World Ranking 2026. június + Elo konverzió
+// attackStrength: xG/meccs a kvalifikációban (1.0 = átlag)
+// defenseStrength: kapott xG/meccs (1.0 = átlag, alacsonyabb = jobb védelem)
+export const TEAM_DB: Record<string, Partial<TeamStats>> = {
+  // TOP (Elo 1600+)
+  'France':            { elo: 1720, attackStrength: 1.55, defenseStrength: 0.78, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Brazil':            { elo: 1680, attackStrength: 1.50, defenseStrength: 0.85, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Spain':             { elo: 1660, attackStrength: 1.45, defenseStrength: 0.85, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'England':           { elo: 1650, attackStrength: 1.40, defenseStrength: 0.90, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Argentina':         { elo: 1640, attackStrength: 1.40, defenseStrength: 0.90, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Germany':           { elo: 1620, attackStrength: 1.35, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Netherlands':       { elo: 1600, attackStrength: 1.30, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  // Strong (Elo 1550-1600)
+  'Portugal':          { elo: 1580, attackStrength: 1.30, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Switzerland':       { elo: 1580, attackStrength: 1.25, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Belgium':           { elo: 1570, attackStrength: 1.30, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'USA':               { elo: 1560, attackStrength: 1.20, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.70 },
+  'Mexico':            { elo: 1550, attackStrength: 1.20, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.60 },
+  'Colombia':          { elo: 1550, attackStrength: 1.15, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Croatia':           { elo: 1550, attackStrength: 1.10, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Japan':             { elo: 1540, attackStrength: 1.10, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Uruguay':           { elo: 1540, attackStrength: 1.10, defenseStrength: 0.90, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  // Medium (Elo 1480-1550)
+  'Morocco':           { elo: 1530, attackStrength: 1.05, defenseStrength: 0.90, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Sweden':            { elo: 1520, attackStrength: 1.10, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Canada':            { elo: 1520, attackStrength: 1.25, defenseStrength: 1.15, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.85 },
+  'Turkey':            { elo: 1510, attackStrength: 1.15, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Senegal':           { elo: 1510, attackStrength: 1.05, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Norway':            { elo: 1500, attackStrength: 1.15, defenseStrength: 1.10, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Austria':           { elo: 1500, attackStrength: 1.10, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Egypt':             { elo: 1490, attackStrength: 1.00, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Ukraine':           { elo: 1490, attackStrength: 1.05, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Ecuador':           { elo: 1480, attackStrength: 1.00, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'South Korea':       { elo: 1480, attackStrength: 1.05, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.70 },
+  'Iran':              { elo: 1470, attackStrength: 0.95, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Scotland':          { elo: 1470, attackStrength: 1.05, defenseStrength: 1.10, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Algeria':           { elo: 1470, attackStrength: 1.05, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Ivory Coast':       { elo: 1460, attackStrength: 1.00, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Bosnia & Herzegovina': { elo: 1460, attackStrength: 1.05, defenseStrength: 1.30, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.60 },
+  'Tunisia':           { elo: 1450, attackStrength: 0.90, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Czech Republic':    { elo: 1450, attackStrength: 1.00, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Australia':         { elo: 1440, attackStrength: 0.95, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Paraguay':          { elo: 1430, attackStrength: 0.75, defenseStrength: 0.85, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Ghana':             { elo: 1420, attackStrength: 0.95, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Panama':            { elo: 1410, attackStrength: 0.85, defenseStrength: 1.10, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'DR Congo':          { elo: 1400, attackStrength: 0.90, defenseStrength: 1.10, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'South Africa':      { elo: 1390, attackStrength: 0.85, defenseStrength: 1.15, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.70 },
+  'Saudi Arabia':      { elo: 1380, attackStrength: 0.80, defenseStrength: 1.15, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Iraq':              { elo: 1370, attackStrength: 0.85, defenseStrength: 1.10, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Haiti':             { elo: 1360, attackStrength: 0.80, defenseStrength: 1.20, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Uzbekistan':        { elo: 1360, attackStrength: 0.80, defenseStrength: 1.15, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Jordan':            { elo: 1350, attackStrength: 0.75, defenseStrength: 1.10, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Qatar':             { elo: 1350, attackStrength: 0.75, defenseStrength: 1.15, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'New Zealand':       { elo: 1340, attackStrength: 0.85, defenseStrength: 1.15, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Cape Verde':        { elo: 1330, attackStrength: 0.80, defenseStrength: 1.20, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+  'Curacao':           { elo: 1300, attackStrength: 0.70, defenseStrength: 1.25, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
+};

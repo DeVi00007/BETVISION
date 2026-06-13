@@ -5,67 +5,29 @@
 
 import { Router, Request, Response } from 'express';
 import { analyzeMatch, type TeamStats, type MarketOdds, type MatchInput } from '../services/quantitativeModel.js';
-import { fetchWorldCupOdds, getBestOdds, getUsageStats } from '../services/oddsApiService.js';
+import { TEAM_DB } from '../data/teamDatabase.js';
+import {
+  fetchWorldCupOdds,
+  fetchWorldCupScores,
+  getBestOdds,
+  getUsageStats,
+  recordPrediction,
+  resolvePredictions,
+  getPerformanceStats,
+  recordOddsFromAnalysis,
+  getOddsMovement,
+  getPredictions,
+  parseScoreResult,
+} from '../services/oddsApiService.js';
 
 export const aiTipsRouter = Router();
 
 const BANKROLL = 100_000;
 const MAX_STAKE_PCT = 8;
-
-// Csapatadatok — ÖSSZES VB 2026 csapat (FIFA/Elo alapú)
-const TEAM_DB: Record<string, Partial<TeamStats>> = {
-  'Canada':         { elo: 1520, attackStrength: 1.25, defenseStrength: 1.15, tier1Missing: 1, tier2Missing: 1, pressureIndex: 0.85 },
-  'Bosnia & Herzegovina': { elo: 1460, attackStrength: 1.05, defenseStrength: 1.30, tier1Missing: 0, tier2Missing: 1, pressureIndex: 0.60 },
-  'USA':             { elo: 1580, attackStrength: 1.20, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 1, pressureIndex: 0.70 },
-  'Paraguay':        { elo: 1430, attackStrength: 0.75, defenseStrength: 0.85, tier1Missing: 1, tier2Missing: 0, pressureIndex: 0.50 },
-  'Mexico':          { elo: 1550, attackStrength: 1.20, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.60 },
-  'Brazil':          { elo: 1700, attackStrength: 1.55, defenseStrength: 0.85, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
-  'Morocco':         { elo: 1570, attackStrength: 1.15, defenseStrength: 0.90, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'France':          { elo: 1710, attackStrength: 1.55, defenseStrength: 0.80, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
-  'England':         { elo: 1660, attackStrength: 1.42, defenseStrength: 0.88, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
-  'Spain':           { elo: 1670, attackStrength: 1.45, defenseStrength: 0.85, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
-  'Argentina':       { elo: 1650, attackStrength: 1.40, defenseStrength: 0.90, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
-  'Germany':         { elo: 1630, attackStrength: 1.38, defenseStrength: 0.93, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
-  'Netherlands':     { elo: 1610, attackStrength: 1.32, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
-  'Portugal':        { elo: 1590, attackStrength: 1.30, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
-  'Belgium':         { elo: 1620, attackStrength: 1.32, defenseStrength: 0.98, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
-  'Switzerland':     { elo: 1560, attackStrength: 1.15, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'Qatar':           { elo: 1350, attackStrength: 0.70, defenseStrength: 1.60, tier1Missing: 0, tier2Missing: 1, pressureIndex: 0.50 },
-  'Haiti':           { elo: 1280, attackStrength: 0.65, defenseStrength: 1.80, tier1Missing: 0, tier2Missing: 3, pressureIndex: 0.40 },
-  'Scotland':        { elo: 1540, attackStrength: 1.10, defenseStrength: 1.10, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.60 },
-  'Australia':       { elo: 1420, attackStrength: 0.80, defenseStrength: 1.30, tier1Missing: 1, tier2Missing: 1, pressureIndex: 0.45 },
-  'Turkey':          { elo: 1530, attackStrength: 1.20, defenseStrength: 1.10, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'Curaçao':         { elo: 1200, attackStrength: 0.55, defenseStrength: 2.20, tier1Missing: 1, tier2Missing: 2, pressureIndex: 0.30 },
-  'Japan':           { elo: 1555, attackStrength: 1.10, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.50 },
-  'Ivory Coast':     { elo: 1510, attackStrength: 1.10, defenseStrength: 1.15, tier1Missing: 1, tier2Missing: 0, pressureIndex: 0.55 },
-  'Ecuador':         { elo: 1520, attackStrength: 1.05, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.60 },
-  'Sweden':          { elo: 1535, attackStrength: 1.10, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'Tunisia':         { elo: 1450, attackStrength: 0.85, defenseStrength: 1.20, tier1Missing: 0, tier2Missing: 1, pressureIndex: 0.50 },
-  'Cape Verde':      { elo: 1350, attackStrength: 0.70, defenseStrength: 1.50, tier1Missing: 1, tier2Missing: 1, pressureIndex: 0.40 },
-  'Egypt':           { elo: 1490, attackStrength: 1.00, defenseStrength: 1.20, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'Saudi Arabia':    { elo: 1400, attackStrength: 0.75, defenseStrength: 1.40, tier1Missing: 0, tier2Missing: 1, pressureIndex: 0.45 },
-  'Uruguay':         { elo: 1580, attackStrength: 1.25, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'Iran':            { elo: 1480, attackStrength: 0.90, defenseStrength: 1.15, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'New Zealand':     { elo: 1380, attackStrength: 0.75, defenseStrength: 1.45, tier1Missing: 1, tier2Missing: 1, pressureIndex: 0.40 },
-  'Senegal':         { elo: 1540, attackStrength: 1.15, defenseStrength: 1.05, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'Croatia':         { elo: 1600, attackStrength: 1.25, defenseStrength: 0.95, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'Colombia':        { elo: 1570, attackStrength: 1.22, defenseStrength: 1.00, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'South Korea':     { elo: 1500, attackStrength: 1.05, defenseStrength: 1.20, tier1Missing: 0, tier2Missing: 1, pressureIndex: 0.50 },
-  'South Africa':    { elo: 1380, attackStrength: 0.75, defenseStrength: 1.50, tier1Missing: 1, tier2Missing: 1, pressureIndex: 0.40 },
-  'Czech Republic':  { elo: 1490, attackStrength: 1.00, defenseStrength: 1.15, tier1Missing: 1, tier2Missing: 0, pressureIndex: 0.50 },
-  'DR Congo':        { elo: 1360, attackStrength: 0.70, defenseStrength: 1.60, tier1Missing: 1, tier2Missing: 2, pressureIndex: 0.45 },
-  'Uzbekistan':      { elo: 1390, attackStrength: 0.80, defenseStrength: 1.40, tier1Missing: 1, tier2Missing: 1, pressureIndex: 0.45 },
-  'Panama':          { elo: 1410, attackStrength: 0.80, defenseStrength: 1.30, tier1Missing: 1, tier2Missing: 1, pressureIndex: 0.40 },
-  'Ghana':           { elo: 1450, attackStrength: 1.00, defenseStrength: 1.30, tier1Missing: 0, tier2Missing: 1, pressureIndex: 0.50 },
-  'Norway':          { elo: 1540, attackStrength: 1.20, defenseStrength: 1.10, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'Algeria':         { elo: 1520, attackStrength: 1.10, defenseStrength: 1.15, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'Austria':         { elo: 1510, attackStrength: 1.05, defenseStrength: 1.10, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.55 },
-  'Iraq':            { elo: 1360, attackStrength: 0.70, defenseStrength: 1.60, tier1Missing: 1, tier2Missing: 2, pressureIndex: 0.40 },
-  'Jordan':          { elo: 1330, attackStrength: 0.65, defenseStrength: 1.80, tier1Missing: 1, tier2Missing: 2, pressureIndex: 0.35 },
-};
+const MIN_VALUE_PCT = 8; // Minimum +EV% küszöb (5% → 8%)
 
 function getTeamStats(name: string): TeamStats {
-  const base = TEAM_DB[name] || { elo: 1500, attackStrength: 1.0, defenseStrength: 1.0, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.5 };
+  const base = TEAM_DB[name] || { elo: 1420, attackStrength: 0.85, defenseStrength: 1.15, tier1Missing: 0, tier2Missing: 0, pressureIndex: 0.5 };
   return {
     name,
     elo: base.elo || 1500,
@@ -115,7 +77,32 @@ aiTipsRouter.get('/tips', async (_req: Request, res: Response) => {
       };
     });
 
-    const totalStake = analyses.reduce((s, a) => s + a.kellyStakeFt, 0);
+    // +EV küszöb: csak 8%+ értékű tippek, max 1 tipp/meccs
+    const filteredAnalyses = analyses
+      .filter(a => a.bestBet && a.bestBet.value >= MIN_VALUE_PCT / 100)
+      .filter((a, i, arr) => arr.findIndex(x => x.matchId === a.matchId) === i); // max 1 tipp/meccs
+
+    const totalStake = filteredAnalyses.reduce((s, a) => s + a.kellyStakeFt, 0);
+
+    // Predikciók rögzítése a visszacsatoláshoz
+    for (const a of analyses) {
+      if (a.bestBet && a.kellyStakeFt > 0) {
+        recordPrediction({
+          matchId: a.matchId,
+          homeTeam: a.homeTeam,
+          awayTeam: a.awayTeam,
+          predicted: a.bestBet.selection.includes('Hazai') ? 'home' : a.bestBet.selection.includes('Döntetlen') ? 'draw' : 'away',
+          marketOdds: a.bestBet.marketOdds,
+          modelProbability: a.bestBet.modelProbability,
+          stakeFt: a.kellyStakeFt,
+          confidence: a.bestBet.confidence,
+          tradeDate: new Date().toISOString(),
+        });
+      }
+    }
+
+    // Odds előzmények rögzítése
+    recordOddsFromAnalysis(apiMatches);
 
     res.json({
       date: new Date().toISOString().split('T')[0],
@@ -134,7 +121,7 @@ aiTipsRouter.get('/tips', async (_req: Request, res: Response) => {
         maxStakePct: MAX_STAKE_PCT,
         strategyType: 'Élő odds + Kvantitatív modell',
       },
-      matches: analyses,
+      matches: filteredAnalyses,
     });
   } catch (error: any) {
     console.error('[aiTips] Hiba:', error.message);
@@ -145,18 +132,95 @@ aiTipsRouter.get('/tips', async (_req: Request, res: Response) => {
   }
 });
 
-// GET /api/ai/portfolio
-aiTipsRouter.get('/portfolio', (_req: Request, res: Response) => {
-  res.json({
-    bankroll: { initial: BANKROLL, current: BANKROLL, pnl: 0, pnlPct: 0 },
-    activeBets: [],
-    history: [],
-    riskMetrics: { maxDrawdown: 0, sharpeRatio: 0, winRate: 0 },
-    lastUpdated: new Date().toISOString(),
-  });
+// GET /api/ai/portfolio — ÉLŐ portfólió P&L-lel
+aiTipsRouter.get('/portfolio', async (_req: Request, res: Response) => {
+  try {
+    const { resolved, pnl } = await resolvePredictions();
+    const stats = getPerformanceStats();
+    res.json({
+      bankroll: { initial: 100000, current: stats.bankroll, pnl: stats.totalPnl, pnlPct: Math.round((stats.totalPnl / 100000) * 100) / 100 },
+      activeBets: 0,
+      history: stats,
+      riskMetrics: { maxDrawdown: 0, sharpeRatio: 0, winRate: stats.winRate },
+      lastUpdated: new Date().toISOString(),
+    });
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// GET /api/ai/results — Lejátszott meccsek eredményei + P&L
+aiTipsRouter.get('/results', async (_req: Request, res: Response) => {
+  try {
+    const scores = await fetchWorldCupScores(3);
+    const completed = scores.filter((s: any) => s.completed);
+    const { resolved, pnl } = await resolvePredictions();
+    const stats = getPerformanceStats();
+
+    // Keressük a predikcióink között az ismert meccseket
+    const predictions = getPredictions();
+
+    const results = completed.map((m: any) => {
+      const homeScore = m.scores?.[0]?.score ?? '?';
+      const awayScore = m.scores?.[1]?.score ?? '?';
+      const result = parseScoreResult(m);
+      const pred = predictions.find((p: any) => p.homeTeam === m.home_team && p.awayTeam === m.away_team);
+      return {
+        match: `${m.home_team} vs ${m.away_team}`,
+        score: `${homeScore}-${awayScore}`,
+        result,
+        predicted: pred ? `${pred.predicted} @${pred.marketOdds}` : null,
+        pnl: pred?.pnl ?? null,
+      };
+    });
+
+    res.json({
+      date: new Date().toISOString().split('T')[0],
+      totalCompleted: completed.length,
+      performance: stats,
+      results,
+    });
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// GET /api/ai/odds-movement — Valós odds változások
+aiTipsRouter.get('/odds-movement', async (_req: Request, res: Response) => {
+  try {
+    const matches = await fetchWorldCupOdds();
+    recordOddsFromAnalysis(matches);
+    const mov = matches.map((m: any) => {
+      const best = getBestOdds(m);
+      const hist = getOddsMovement(m.id);
+      return {
+        match: `${m.home_team} vs ${m.away_team}`,
+        current: `${best.homeOdds.toFixed(2)} - ${best.drawOdds.toFixed(2)} - ${best.awayOdds.toFixed(2)}`,
+        movement: hist,
+      };
+    }).filter((x: any) => x.movement !== null);
+    res.json({ snapshots: mov.length, movements: mov.slice(0, 20) });
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 // POST /api/ai/analyze
+
+// Történelmi predikciók rögzítése (nap 1)
+recordPrediction({
+  matchId: 'wc-b-can-bos',
+  homeTeam: 'Canada', awayTeam: 'Bosnia & Herzegovina',
+  predicted: 'home', marketOdds: 4.0, modelProbability: 0.282,
+  stakeFt: 3223, confidence: 70, tradeDate: '2026-06-12T12:00:00Z',
+});
+recordPrediction({
+  matchId: 'wc-d-usa-par',
+  homeTeam: 'USA', awayTeam: 'Paraguay',
+  predicted: 'home', marketOdds: 2.16, modelProbability: 0.682,
+  stakeFt: 8000, confidence: 82, tradeDate: '2026-06-12T12:00:00Z',
+});
+
 aiTipsRouter.post('/analyze', (req: Request, res: Response) => {
   try {
     const { homeTeam, awayTeam, homeOdds, drawOdds, awayOdds } = req.body;
